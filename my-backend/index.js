@@ -29,7 +29,6 @@ class ProductManager {
         Object.assign(producto, datosActualizados);
         console.log("Producto actualizado");
     }
-    //------------------------
     validarObligatorios(producto) {
         return (
             producto.nombre &&
@@ -76,19 +75,19 @@ class ProductManager {
 const productManager = new ProductManager("productos.json");
 
 const producto = {
-    nombre: "Audifonos",
-    descripcion: "Audifonos Sony",
-    precio: 250000,
-    codigo: "SNQ122",
-    stock: 5,
+    nombre: "Remera",
+    descripcion: "Remera Adidas",
+    precio: 10000,
+    codigo: "ADI111",
+    stock: 2,
 };
 
 const producto2 = {
-    nombre: "Samsung S22",
-    descripcion: "Telefono Samsung S22",
-    precio: 4200000,
-    codigo: "SPSS23",
-    stock: 15,
+    nombre: "Zapatillas Adidas",
+    descripcion: "Yeezy 350",
+    precio: 60000,
+    codigo: "YEEZY",
+    stock: 7,
 };
 
 productManager.addProduct(producto);
@@ -99,8 +98,8 @@ const productofind = productManager.getProductByI(2);
 console.log("Producto encontrado:", productofind);
 productManager.getproducts();
 productManager.actualizarProducto(2, {
-    nombre: "Samsung S21",
-    precio: 5000000,
-    stock: 8,
+    nombre: "Nike Air Force 1",
+    precio: 43000,
+    stock: 1,
 });
 productManager.getproducts();
