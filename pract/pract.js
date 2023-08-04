@@ -1,19 +1,37 @@
 const fs = require('fs');
-const Blob = require('buffer').Blob;
+const blob = require('buffer');
 
-const manejoJson = async () => {
+async function readFile(file) {
     try {
-        const data = await fs.promises.readFile('./package.json', 'utf-8');
-        const info = {
-            contenidoStr: data, 
-            contenidoObj: JSON.parse(data),
-            size: new Blob([data]).size,
-        }
-        console.log(info);
-        await fs.promises.writeFile('./info.json', JSON.stringify(info));
-    } catch (error) {
-        throw new Error(error);
+        let result = await fs.promises.readFile(file, 'utf-8');
+        let data = await JSON.parse(result);
+        return data;
+    } catch (err) {
+        console.log(err);
     }
-
 }
-manejoJson();
+
+
+async function writeFile(file, data) {
+    try {
+        await fs.promises.writeFile(file, JSON.stringify(data));
+        return true;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+
+async function deleteFile(file) {
+    try {
+        await fs.promises.unlink(file);
+        return true;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+
+readFile();
+writeFile();
+deleteFile();
