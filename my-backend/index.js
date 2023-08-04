@@ -6,7 +6,7 @@ class ManagerProduct {
     constructor() {
         
     }
-    consultarProductos = async () => {
+    consultarProductos  = async () => {
         if (fs.existsSync(path)) {
             const data = await fs.promises.readFile(path, 'utf-8');
             const product = JSON.parse(data);
@@ -39,6 +39,35 @@ const crearProductos = async () => {
 }
 
 crearProductos();   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
