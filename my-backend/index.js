@@ -11,6 +11,9 @@ class ManagerProduct {
             const data = await fs.promises.readFile(path, 'utf-8');
             const product = JSON.parse(data);
             return product;
+        } else {
+            console.log('Archivo no existe');
+            return[]
         }
     }
     getProductsById = async (id) => {
@@ -23,7 +26,7 @@ class ManagerProduct {
         }
     }
     crearProducto = async (producto) => {
-        const productos = [];
+        const productos = await this.consultarProductos();
         const id = this.#addId(productos)
         const newProduct = { id, ...producto }
         productos.push(newProduct);
@@ -62,15 +65,6 @@ class ManagerProduct {
         }
         return id
     }
-    deleteFile = async (producto) => {
-        try {
-            await fs.promises.unlink(producto);
-            return true;
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
 }
 
 const manager = new ManagerProduct();
@@ -96,9 +90,9 @@ const crearProductos = async () => {
     await manager.crearProducto(producto);
     await manager.crearProducto(producto1);
     let segundaConsulta = await manager.consultarProductos();
-    await manager.deleteProductsById(4)
+    await manager.deleteProductsById(2)
     await manager.deleteProducts()
-    await manager.updateProduct(12,{description:'nada'})
+    // await manager.updateProduct()
     console.log(segundaConsulta);
 }
 
