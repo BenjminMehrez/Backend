@@ -1,5 +1,6 @@
 const fs = require('fs');
 
+
 const path = './my-backend/productos.json'
 
 class ManagerProduct {

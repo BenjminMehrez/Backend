@@ -1,37 +1,44 @@
 const fs = require('fs');
-const blob = require('buffer');
+const crypto = require('crypto');
 
-async function readFile(file) {
-    try {
-        let result = await fs.promises.readFile(file, 'utf-8');
-        let data = await JSON.parse(result);
-        return data;
-    } catch (err) {
-        console.log(err);
+const path = '../pract/Usuarios.json'
+
+class ManagerUsuarios {
+    constructor() {
+
+    }
+    consultarUsuarios = async () => {
+        if (fs.existsSync(path)) {
+            const data = await fs.promises.readFile(path, 'utf-8');
+            const user = JSON.parse(data);
+            return user;
+        } else {
+            return[]
+        }
+    }
+    crearUsuario = async (usuario) => {
+        const users = await this.consultarUsuarios();
+        usuario.salt = crypto.randomBytes(128).toString('base64');
+        usuario.password = crypto.createHmac('sha256', usuario.salt).update(usuario.password).digest('hex');
+        users.push(usuario);
+        await fs.promises.writeFile(path, JSON.stringify(users))
+    }
+    validarUsuario = async (nombreUsuario, password) => {
+        const usuarios = await this.consultarUsuarios();
+        const usuariosIndex = usuarios.findIndex(user => user.nombreUsuario === nombreUsuario);
+        if (usuariosIndex === -1) {
+            console.log('Error: el usuario no existe')
+            return;
+        }
+        const usuario = usuarios [usuariosIndex]
+        const newHash = crypto.createHmac('sha256', usuario.salt).update(password).digest('hex');
+        if (newHash === usuario.password) {
+            console.log('usuario logueado');
+        }else {
+            console.log('contraseña incorrecta');
+        }
+
     }
 }
 
-
-async function writeFile(file, data) {
-    try {
-        await fs.promises.writeFile(file, JSON.stringify(data));
-        return true;
-    } catch (err) {
-        console.log(err);
-    }
-}
-
-
-async function deleteFile(file) {
-    try {
-        await fs.promises.unlink(file);
-        return true;
-    } catch (err) {
-        console.log(err);
-    }
-}
-
-
-readFile();
-writeFile();
-deleteFile();
+module.exports = ManagerUsuarios;
