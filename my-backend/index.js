@@ -14,7 +14,7 @@ class ManagerProduct {
             return product;
         } else {
             console.log('Archivo no existe');
-            return[]
+            return []
         }
     }
     getProductsById = async (id) => {
@@ -26,13 +26,38 @@ class ManagerProduct {
             return 'Producto no existe'
         }
     }
-    crearProducto = async (producto) => {
-        const productos = await this.consultarProductos();
-        const id = this.#addId(productos)
-        const newProduct = { id, ...producto }
-        productos.push(newProduct);
-        await fs.promises.writeFile(path, JSON.stringify(productos))
-        return newProduct
+    addProduct = async (product) => {
+        if (
+            !product.description ||
+            !product.price ||
+            !product.title ||
+            !product.stock ||
+            !product.thumbnail
+        ) {
+            console.log(
+                "Product must have all properties: title, description, price, thumbnail, stock"
+            );
+        } else {
+            product.id = await this.setId().then((id) => id);
+            try {
+                if (product.id === 1) {
+                    await fs.promises.writeFile(
+                        this.path,
+                        JSON.stringify([product], null, 2)
+                    );
+                } else {
+                    let products = await this.getProducts().then((data) => data);
+                    products.push(product);
+                    await fs.promises.writeFile(
+                        this.path,
+                        JSON.stringify(products, null, 2)
+                    );
+                    return "Product added successfully";
+                }
+            } catch (error) {
+                return error;
+            }
+        }
     }
     deleteProducts = async () => {
         if (fs.existsSync(path)) {
@@ -68,33 +93,46 @@ class ManagerProduct {
     }
 }
 
-const manager = new ManagerProduct();
+module.exports = ManagerProduct;
 
 
-const crearProductos = async () => {
-    let consultarProductos = await manager.consultarProductos();
-    console.log(consultarProductos);
-    let producto = {
-        nombre: "Remera",
-        descripcion: "Remera Adidas",
-        precio: 10000,
-        codigo: "ADI111",
-        stock: 2,
-    };
-    let producto1 = {
-        nombre: "Zapatilla",
-        descripcion: "Zapatilla Adidas",
-        precio: 15000,
-        codigo: "ADI122",
-        stock: 1,
-    }
-    await manager.crearProducto(producto);
-    await manager.crearProducto(producto1);
-    let segundaConsulta = await manager.consultarProductos();
-    await manager.deleteProductsById(2)
-    await manager.deleteProducts()
-    // await manager.updateProduct()
-    console.log(segundaConsulta);
-}
 
-crearProductos();   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const crearProductos = async () => {
+//     let consultarProductos = await manager.consultarProductos();
+//     console.log(consultarProductos);
+//     let producto = {
+//         nombre: "Remera",
+//         descripcion: "Remera Adidas",
+//         precio: 10000,
+//         codigo: "ADI111",
+//         stock: 2,
+//     };
+//     let producto1 = {
+//         nombre: "Zapatilla",
+//         descripcion: "Zapatilla Adidas",
+//         precio: 15000,
+//         codigo: "ADI122",
+//         stock: 1,
+//     }
+//     await manager.crearProducto(producto);
+//     await manager.crearProducto(producto1);
+//     let segundaConsulta = await manager.consultarProductos();
+//     await manager.deleteProductsById(2)
+//     await manager.deleteProducts()
+//     // await manager.updateProduct()
+//     console.log(segundaConsulta);
+// } 

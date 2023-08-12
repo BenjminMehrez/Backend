@@ -1,22 +1,15 @@
 {
   "name": "my-backend",
   "version": "1.0.0",
-  "description": "trabajando con npm",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/BenjminMehrez/Backend.git"
-  },
-  "author": "Benjamin",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/BenjminMehrez/Backend/issues"
-  },
-  "homepage": "https://github.com/BenjminMehrez/Backend#readme",
   "dependencies": {
-    "moment": "^2.29.4"
+    "express": "^4.18.2"
   }
 }
