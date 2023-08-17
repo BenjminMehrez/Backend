@@ -1,8 +1,8 @@
 import { Router } from "express";
-import ManagerProduct from "../managers/managerProduct.js";
+import ManagerProduct, { path } from "../managers/managerProduct.js";
 import { __dirname } from "../utils.js"; 
 
-const manager = new ManagerProduct(__dirname + "/productos.json")
+const manager = new ManagerProduct(__dirname + path)
 const router = Router();
 
 
@@ -49,7 +49,7 @@ router.put('/:pid', async (req, res) => {
     if (producto) {
         res.status(200).json({ message: "Producto actualizado", producto });
     }else {
-        res.status(400).json({ message: "Error no se pudo actualizar", product });
+        res.status(400).json({ message: "Error no se pudo actualizar", producto });
     }
 })
 
