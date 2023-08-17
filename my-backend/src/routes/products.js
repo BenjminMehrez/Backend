@@ -1,8 +1,8 @@
 import { Router } from "express";
 import ManagerProduct from "../managers/managerProduct.js";
-import { uploader } from "../utils.js"; 
+import { __dirname } from "../utils.js"; 
 
-const manager = new ManagerProduct(uploader + "/productos.json")
+const manager = new ManagerProduct(__dirname + "/productos.json")
 const router = Router();
 
 
