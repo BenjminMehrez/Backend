@@ -1,6 +1,7 @@
 import { Router } from "express";
 import ManagerProduct, { path } from "../managers/managerProduct.js";
-import { __dirname } from "../utils.js"; 
+import __dirname from "../utils.js";
+
 
 const manager = new ManagerProduct(__dirname + path)
 const router = Router();
