@@ -17,8 +17,8 @@ app.set('views', `${__dirname}/views`);
 app.set('view engine', 'handlebars');
 
 
-app.use('/api/products', productsRouter);
-app.use('/realtimeproducts', viewsRouter);
+app.use('/api', productsRouter);
+app.use('/', viewsRouter);
 
 const server = app.listen(8080, () => {
     console.log('Server arriva 8080');
@@ -26,16 +26,24 @@ const server = app.listen(8080, () => {
 
 const io = new Server(server);
 
-const manager = new ManagerProduct();
+const manager = new ManagerProduct(__dirname + '/files/productos.json');
 
-io.on('connection', socket => {
-    console.log('Connection on');
+io.on("connection",async(socket)=>{
+    console.log("client connected con ID:",socket.id)
+    const listadeproductos=await manager.consultarProductos({})
+    io.emit("enviodeproducts",listadeproductos)
 
-    socket.on('product', async (data) => {
-        console.log('Soy data:', data);
-        await manager.addProduct( data.title, data.description, data.price, data.thumbnails, data.status, data.code, data.stock );
-
-        const productos = await manager.consultarProductos();
-        io.emit('allProduct', productos);
+    socket.on("addProduct",async(obj)=>{
+    await manager.addProduct(obj)
+    const listadeproductos=await manager.consultarProductos({})
+    io.emit("enviodeproducts",listadeproductos)
     })
+
+    socket.on("deleteProduct",async(id)=>{
+        console.log(id)
+        await manager.deleteProduct(id)
+        const listadeproductos=await manager.consultarProductos({})
+        io.emit("enviodeproducts",listadeproductos)
+        })
+    
 })

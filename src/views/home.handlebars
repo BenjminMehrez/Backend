@@ -3,9 +3,9 @@
         <h1 class="container title">Product Sports</h1>
     </header>
 
+    {{#each listadeproductos}}
+
     <div class="container">
-        {{#if products }}
-        {{#each products}}
         <div class="caja">
             <div><span>ID: </span>
                 <p>{{id}}</p>
@@ -29,34 +29,8 @@
                 <p>{{stock}}</p>
             </div>
         </div>
-        {{/each}}
-        {{else}}
-        {{#each limitedProducts}}
-        <div class="cajas">
-            <div><span>ID: </span>
-                <p>{{id}}</p>
-            </div>
-            <div><span>Nombre: </span>
-                <p>{{title}}</p>
-            </div>
-            <div><span>Precio: </span>
-                <p>{{price}}</p>
-            </div>
-            <div><span>Descripcion: </span>
-                <p>{{description}}</p>
-            </div>
-            <div><span>Thumbnails: </span>
-                <p>{{thumbnails}}</p>
-            </div>
-            <div><span>Status: </span>
-                <p>{{status}}</p>
-            </div>
-            <div><span>Stock: </span>
-                <p>{{stock}}</p>
-            </div>
-        </div>
-        {{/each}}
-        {{/if}}
+
     </div>
+    {{/each}}
 
 </div>
