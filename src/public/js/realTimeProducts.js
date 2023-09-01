@@ -15,7 +15,7 @@ function updateProductList(products) {
         <div class="container">
         <div class="caja">
         <div><span>ID: </span>
-            <p>${product.id}</p>
+            <p> ${product.id}</p>
             </div>
             <div><span>Nombre: </span>
             <p>${product.title}</p>
@@ -28,9 +28,6 @@ function updateProductList(products) {
             </div>
             <div><span>Thumbnails: </span>
             <p>${product.thumbnails}</p>
-            </div>
-            <div><span>Status: </span>
-            <p>${product.status}</p>
             </div>
             <div><span>Stock: </span>
             <p>${product.stock}</p>

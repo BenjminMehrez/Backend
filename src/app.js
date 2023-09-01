@@ -35,7 +35,7 @@ io.on("connection",async(socket)=>{
 
     socket.on("addProduct",async(obj)=>{
     await manager.addProduct(obj)
-    const listadeproductos=await manager.consultarProductos({})
+    const listadeproductos=await manager.consultarProductos()
     io.emit("enviodeproducts",listadeproductos)
     })
 
