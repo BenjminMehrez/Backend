@@ -26,7 +26,7 @@
     padding: 5px;
 }
 
-#formulario > div {
+#formulario>div {
     display: flex;
     flex-direction: row wrap;
 
@@ -34,10 +34,10 @@
 }
 
 label {
-    margin-right: 5px ;
+    margin-right: 5px;
 }
 
-#liveProducts{
+#liveProducts {
     display: flex;
     flex-flow: column wrap;
     align-items: flex-start;
@@ -48,15 +48,24 @@ label {
 }
 
 
+#list-products {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+
+}
+
 .caja {
     padding: 15px;
     margin: 15px;
     width: 750px;
     border: 1px solid rgb(163, 10, 165);
-    
+
 }
 
-.caja > div {
+.caja>div {
     display: flex;
     flex-flow: row nowrap;
 }

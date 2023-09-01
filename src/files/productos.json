@@ -1,38 +1,50 @@
 [
-    {
-        "title": "Remera",
-        "description": "Remera Puma",
-        "price": 11000,
-        "thumbail": "imagen1",
-        "code": "RMAA",
-        "stock": 3,
-        "id": 0
-    },
-    {
-        "title": "Zapatilla",
-        "description": "Zapatilla Adidas",
-        "price": 437000,
-        "thumbail": "imagen2",
-        "code": "ZPAA",
-        "stock": 5,
-        "id": 1
-    },
-    {
-        "title": "Botines",
-        "description": "Botines Future Play",
-        "price": 31000,
-        "thumbail": "imagen3",
-        "code": "BTAA",
-        "stock": 2,
-        "id": 2
-    },
-    {
-        "title": "Campera",
-        "description": "Campera TheNorthFace",
-        "price": 47000,
-        "thumbail": "imagen4",
-        "code": "CAMAA",
-        "stock": 1,
-        "id": 3
-    }
+	{
+		"title": "Remera",
+		"description": "Remera Puma",
+		"price": 11000,
+		"thumbail": "imagen1",
+		"code": "RMAA",
+		"stock": 3,
+		"id": 0
+	},
+	{
+		"title": "Zapatilla",
+		"description": "Zapatilla Adidas",
+		"price": 437000,
+		"thumbail": "imagen2",
+		"code": "ZPAA",
+		"stock": 5,
+		"id": 1
+	},
+	{
+		"title": "Botines",
+		"description": "Botines Future Play",
+		"price": 31000,
+		"thumbail": "imagen3",
+		"code": "BTAA",
+		"stock": 2,
+		"id": 2
+	},
+	{
+		"title": "Campera",
+		"description": "Campera TheNorthFace",
+		"price": 47000,
+		"thumbail": "imagen4",
+		"code": "CAMAA",
+		"stock": 1,
+		"id": 3
+	},
+	{
+		"title": {
+			"title": "Benjamin",
+			"description": "fachera",
+			"price": "12000",
+			"thumbnail": "jfajfa",
+			"code": "22",
+			"stock": "3"
+		},
+		"status": true,
+		"id": 4
+	}
 ]
