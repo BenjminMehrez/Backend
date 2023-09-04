@@ -4,6 +4,7 @@ import __dirname from './utils.js';
 import { Server } from 'socket.io';
 import productsRouter from './routes/products.js';
 import viewsRouter from './routes/views.js';
+import cartRouter from "./routes/carts.js";
 import ManagerProduct from './managers/managerProduct.js';
 
 const app = express(); 
@@ -18,6 +19,7 @@ app.set('view engine', 'handlebars');
 
 
 app.use('/api', productsRouter);
+app.use("/api", cartRouter);
 app.use('/', viewsRouter);
 
 const server = app.listen(8080, () => {

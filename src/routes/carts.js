@@ -1,5 +1,5 @@
 import { Router } from "express"
-import CartManager from "../managers/cartManager.js"
+import CartManager from "../managers/CartsManager.js"
 import  __dirname from "../utils.js"
 
 
