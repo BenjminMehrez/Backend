@@ -2,7 +2,7 @@ import fs from "fs"
 
 export default class CartManager {
     constructor() {
-        this.path = './src/files/carts.json';
+        this.path = './dao/files/db/carts.json';
 
     }
 

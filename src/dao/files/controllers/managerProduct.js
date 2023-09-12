@@ -4,7 +4,7 @@ import fs from 'fs';
 
 export default class ManagerProduct {
     constructor() {
-        this.path = './src/files/productos.json';
+        this.path = './dao/files/db/productos.json';
     }
 
     consultarProductos = async (info) => {
