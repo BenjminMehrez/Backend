@@ -66,7 +66,7 @@ io.on("connection", async (socket) => {
     socket.on("mensaje", async (info) => {
         console.log(info)
         await messagesManager.createMessage(info);
-        socketServer.emit("chat", await messagesManager.getMessages());
+        io.emit("chat", await messagesManager.getMessages());
     });
 
 })
