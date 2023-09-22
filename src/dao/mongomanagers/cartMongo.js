@@ -58,14 +58,29 @@ class CartManager {
     
             return await cartModel.findById(cid);
         } catch (err) {
-            console.error('Error al agregar el producto al carrito:', err.message);
+            console.error('Error al añadir producto', err.message);
             return err;
         }
     };
-    
-    
+    deleteProductInCart = async (cid, products) => {
+        try {
+            return await cartModel.findOneAndUpdate(
+                { _id: cid },
+                { products },
+                { new: true })
 
+        } catch (err) {
+            return err
+        }
 
-};
+    }
+    updateOneProduct = async (cid, products) => {
+
+        await cartModel.updateOne(
+            { _id: cid },
+            { products })
+        return await cartModel.findOne({ _id: cid })
+    }
+}
 
 export default CartManager;

@@ -1,16 +1,43 @@
 import { productsModel } from "../models/products.js"
 
 export default class ProductManager {
+    categories = async () => {
+        try {
+            const categories = await productsModel.aggregate([
+                {
+                    $group: {
+                        _id: null,
+                        categories: { $addToSet: "$category" }
+                    }
+                }
+            ])
 
+            return categories[0].categories
 
-    consultarProductos = async () => {
+        }
+        catch (err) {
+            console.log(err);
+            return err
+        }
+
+    }
+
+    getProductsView = async () => {
         try {
             return await productsModel.find().lean();
+
+        } catch (err) {
+            return err
+        }
+    };
+
+    consultarProductos = async (filter, options) => {
+        try {
+            return await productsModel.paginate(filter, options);
         } catch (err) {
             return err
         }
     }
-
 
     getProductById = async (id) => {
         try {
@@ -45,7 +72,7 @@ export default class ProductManager {
         }
 
     }
-    
+
     deleteProduct = async (id) => {
         try {
             return await productsModel.findByIdAndDelete(id);

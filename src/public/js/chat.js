@@ -58,3 +58,9 @@ socketClient.on("broadcast", usuario => {
         }
     }).showToast()
 })
+
+document.getElementById("clearChat").addEventListener("click", () => {
+
+    document.getElementById("chat").textContent = "";
+    socketClient.emit("clearchat");
+});
