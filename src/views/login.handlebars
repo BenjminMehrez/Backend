@@ -3,15 +3,19 @@
 <p>{{message}}</p>
 <form method="post" action="/api/sessions/login">
     <label>Email</label>
-    <input name="email">
+    <input  type="email" name="email">
     <br>
     <label>Password</label>
     <input name="password" type="password">
+    <a href="/password">
+    Restaurar contraseña
+</a>
+
     <br>
     <input type="submit">
 </form>
 <br>
-<p>No estas registrado?? <a href="../registro">Click aqui para registrarte</a></p>
+<p>No estas registrado?? <a href="/registro">Click aqui para registrarte</a></p>
 </div>
 
 <a href="/api/sessions/loginGithub">

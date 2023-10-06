@@ -1,6 +1,5 @@
 export const UserAuthenticated = (req,res,next)=>{
-    console.log(req.session);
-    if(req.session?.userInfo){
+    if(req.user){
         next();
     } else {
         res.redirect("/login");
@@ -8,8 +7,7 @@ export const UserAuthenticated = (req,res,next)=>{
 };
 
 export const LoginView = (req,res,next)=>{
-    console.log(req.session);
-    if(req.session?.userInfo){
+    if(req.user){
         res.redirect("/profile");
     } else {
         next();

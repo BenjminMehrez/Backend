@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { usersService } from "../dao/index.js";
-import { createHash } from "../utils.js";
+import { createHash, isValidPassword } from "../utils.js";
 import passport from "passport";
 
 const router = Router();
@@ -30,12 +30,12 @@ router.post("/password", async(req,res)=>{
         const form = req.body;
         const user = await usersService.getByEmail(form.email);
         if(!user){
-            return res.render("password",{error:"Error al cambiar contraseña"});
+            return res.render("password",{error:"No es posible cambiar la contraseña"});
         }
         user.password = createHash(form.newPassword);
         console.log(user);
         await usersService.update(user._id,user);
-        return res.render("login",{message:"Contraseña cambiada"})
+        return res.render("login",{message:"Contraseña restaurada"})
     } catch (error) {
         res.render("password",{error:error.message});
     }
@@ -49,11 +49,10 @@ router.get("/github-callback", passport.authenticate("githubLoginStrategy",{
     res.redirect("/profile");
 });
 
-
 router.get("/logout", (req,res)=>{
-    req.logout(error=>{
+    req.logOut(error=>{
         if(error){
-            return res.render("profile",{user: req.user, error:"Error al cerar sesion"});
+            return res.render("profile",{user: req.user, error:"No se pudo cerrar la sesion"});
         } else {
             req.session.destroy(error=>{
                 if(error) return res.render("profile",{user: req.session.userInfo, error:"No se pudo cerrar la sesion"});

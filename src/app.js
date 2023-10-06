@@ -25,19 +25,29 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(`${__dirname}/public`));
 
+
+const server = app.listen(8080, () => {
+    console.log('Server arriva 8080');
+})
+
+
 app.engine('handlebars', handlebars.engine());
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname,"/views"));
 
+app.use(session({
+    store:MongoStore.create({
+        mongoUrl:config.mongo.url
+    }),
+    secret:config.server.secretSession,
+    resave:true,
+    saveUninitialized:true
+}));
 
 // app.use('/api/products', productsRouter);
 // app.use("/api/carts", cartRouter);
 // app.use('/', viewsRouter);
 
-
-const server = app.listen(8080, () => {
-    console.log('Server arriva 8080');
-})
 
 
 initializePassport();
@@ -51,16 +61,8 @@ socketProducts(socketServer)
 socketChat(socketServer)
 
 
-app.use(session({
-    store:MongoStore.create({
-        mongoUrl:config.mongo.url
-    }),
-    secret:config.server.secretSession,
-    resave:true,
-    saveUninitialized:true
-}));
 
-app.use('/', viewsRouter);
+app.use(viewsRouter);
 app.use("/api/sessions", sessionsRouter);
 
 
