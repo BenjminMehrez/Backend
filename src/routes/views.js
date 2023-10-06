@@ -6,8 +6,8 @@ const manager = new ProductManager();
 
 const router = Router();
 
-router.get("/", (req,res)=>{
-    const listadeproductos= manager.getProductsView({})
+router.get("/",async(req,res)=>{
+    const listadeproductos=await manager.getProductsView({})
     console.log(listadeproductos)
     res.render("home",{listadeproductos})
 })
@@ -24,11 +24,11 @@ router.get("/registro", LoginView,(req,res)=>{
     res.render("signup");
 });
 
-router.get("/login", LoginView, (req,res)=>{
+router.get("/", LoginView, (req,res)=>{
     res.render("login");
 });
 
-router.get("/password", LoginView, (req,res)=>{
+router.get("/changePassword", LoginView, (req,res)=>{
     res.render("password");
 });
 
@@ -36,7 +36,6 @@ router.get("/profile", UserAuthenticated, (req,res)=>{
     console.log(req.session);
     res.render("profile",{user: req.session.userInfo});
 });
-
 
 
 export default router;

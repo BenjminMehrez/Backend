@@ -25,19 +25,19 @@ router.get("/fail-login", (req,res)=>{
     res.render("login",{error:"Credenciales invalidas"});
 });
 
-router.post("/password", async(req,res)=>{
+router.post("/changePass", async(req,res)=>{
     try {
         const form = req.body;
         const user = await usersService.getByEmail(form.email);
         if(!user){
-            return res.render("password",{error:"No es posible cambiar la contraseña"});
+            return res.render("changePassword",{error:"No es posible cambiar la contraseña"});
         }
         user.password = createHash(form.newPassword);
         console.log(user);
         await usersService.update(user._id,user);
         return res.render("login",{message:"Contraseña restaurada"})
     } catch (error) {
-        res.render("password",{error:error.message});
+        res.render("changePassword",{error:error.message});
     }
 });
 
