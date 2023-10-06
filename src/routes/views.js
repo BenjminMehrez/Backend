@@ -28,6 +28,10 @@ router.get("/", LoginView, (req,res)=>{
     res.render("login");
 });
 
+router.get("/password", LoginView, (req,res)=>{
+    res.render("password");
+});
+
 router.get("/profile", UserAuthenticated, (req,res)=>{
     console.log(req.session);
     res.render("profile",{user: req.session.userInfo});

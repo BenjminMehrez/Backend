@@ -1,47 +1,65 @@
 import { Router } from "express";
 import { usersService } from "../dao/index.js";
+import { createHash } from "../utils.js";
+import passport from "passport";
 
 const router = Router();
 
-router.post("/signup", async(req,res)=>{
+router.post("/signup", passport.authenticate("signupStrategy",{
+    failureRedirect:"/api/sessions/fail-signup"
+}) , (req,res)=>{
+    res.render("login",{message:"usuario registrado"});
+});
+
+router.get("/fail-signup", (req,res)=>{
+    res.render("signup",{error:"No se pudo registrar el usuario"});
+});
+
+router.post("/login", passport.authenticate("loginStrategy",{
+    failureRedirect:"/api/sessions/fail-login"
+}), (req,res)=>{
+    res.redirect("/profile");
+});
+
+router.get("/fail-login", (req,res)=>{
+    res.render("login",{error:"Credenciales invalidas"});
+});
+
+router.post("/password", async(req,res)=>{
     try {
-        const signupForm = req.body;
-        const user = await usersService.getByEmail(signupForm.email);
-        if(user){
-            return res.render("signup",{error:"el usuario ya esta registrado"});
+        const form = req.body;
+        const user = await usersService.getByEmail(form.email);
+        if(!user){
+            return res.render("password",{error:"Error al cambiar contraseña"});
         }
-        const result = await usersService.save(signupForm);
-        res.render("login",{message:"usuario registrado"});
+        user.password = createHash(form.newPassword);
+        console.log(user);
+        await usersService.update(user._id,user);
+        return res.render("login",{message:"Contraseña cambiada"})
     } catch (error) {
-        res.render("signup",{error:error.message});
+        res.render("password",{error:error.message});
     }
 });
 
-router.post("/login", async(req,res)=>{
-    try {
-        const loginForm = req.body;
-        const user = await usersService.getByEmail(loginForm.email);
-        if(!user){
-            return res.render("login",{error:"El usuario no se ha registrado"});
-        }
-        if(user.password === loginForm.password){
-            req.session.userInfo = {
-                first_name:user.first_name,
-                email:user.email
-            };
-            res.redirect("/profile");
-        } else {
-            return res.render("login",{error:"Credenciales invalidas"});
-        }
-    } catch (error) {
-        res.render("signup",{error:error.message});
-    }
+router.get("/loginGithub", passport.authenticate("githubLoginStrategy"));
+
+router.get("/github-callback", passport.authenticate("githubLoginStrategy",{
+    failureRedirect:"/api/sessions/fail-signup"
+}), (req,res)=>{
+    res.redirect("/profile");
 });
+
 
 router.get("/logout", (req,res)=>{
-    req.session.destroy(error=>{
-        if(error) return res.render("profile",{user: req.session.userInfo, error:"No se pudo cerrar la sesion"});
-        res.redirect("/");
+    req.logout(error=>{
+        if(error){
+            return res.render("profile",{user: req.user, error:"Error al cerar sesion"});
+        } else {
+            req.session.destroy(error=>{
+                if(error) return res.render("profile",{user: req.session.userInfo, error:"No se pudo cerrar la sesion"});
+                res.redirect("/");
+            })
+        }
     })
 });
 
