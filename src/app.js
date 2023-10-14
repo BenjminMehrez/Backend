@@ -1,39 +1,44 @@
 import express from 'express';
 import { config } from "./config/config.js";
-import handlebars from 'express-handlebars';
-import {__dirname} from './utils.js';
-import path from 'path';
-import session from 'express-session';
-import MongoStore from 'connect-mongo';
+import { engine } from 'express-handlebars';
+import path from "path";
+import { __dirname } from "./utils.js"
+import session from "express-session";
+import MongoStore from "connect-mongo";
 import { initializePassport } from "./config/passport.js";
-import passport from 'passport';
-import { connectDB } from "./config/server.js";
+import passport from "passport";
+import { viewsRouter }   from "./routes/views.js";
+import { sessionsRouter } from "./routes/sessions.routes.js";
+
 import { Server } from 'socket.io';
+import {connectDB} from "./config/server.js"
 
-import productsRouter from './routes/products.js';
-import viewsRouter from './routes/views.js';
-import cartRouter from "./routes/carts.js";
-
-import socketChat from "./listeners/socketChat.js";
-import socketProducts from "./listeners/socketProducts.js";
-import {sessionsRouter} from "./routes/sessions.js";
+import socketProducts from "./listeners/socketProducts.js"
+import socketChat from './listeners/socketChat.js';
 
 
+
+const PORT = config.server.port;
 const app = express();
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(`${__dirname}/public`));
+app.use(express.static(__dirname + "/public"));
 
+const httpServer = app.listen(PORT, () => {
+    try {
+        console.log(`Listening to the port ${PORT}\n`);
+    }
+    catch (err) {
+        console.log(err);
+    }
+});
 
-const server = app.listen(8080, () => {
-    console.log('Server arriva 8080');
-})
-
-
-app.engine('handlebars', handlebars.engine());
+app.engine('handlebars', engine({extname: 'handlebars'}));
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname,"/views"));
+
 
 app.use(session({
     store:MongoStore.create({
@@ -44,25 +49,17 @@ app.use(session({
     saveUninitialized:true
 }));
 
-// app.use('/api/products', productsRouter);
-// app.use("/api/carts", cartRouter);
-// app.use('/', viewsRouter);
-
-
-
 initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
 
-const socketServer = new Server(server)
+const socketServer = new Server(httpServer)
 
 socketProducts(socketServer)
 socketChat(socketServer)
 
 
-
 app.use(viewsRouter);
 app.use("/api/sessions", sessionsRouter);
-
 

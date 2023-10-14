@@ -42,10 +42,13 @@ router.post("/changePass", async(req,res)=>{
 });
 
 router.get("/loginGithub", passport.authenticate("githubLoginStrategy"));
+console.log("Paso 2, antes de github-callback");
 
 router.get("/github-callback", passport.authenticate("githubLoginStrategy",{
     failureRedirect:"/api/sessions/fail-signup"
+    
 }), (req,res)=>{
+    console.log("Paso 2, github-callback");
     res.redirect("/profile");
 });
 
