@@ -1,6 +1,6 @@
 import { productsModel } from "../models/products.js"
 
-export default class ProductManager {
+export class ProductManager {
     categories = async () => {
         try {
             const categories = await productsModel.aggregate([
@@ -31,13 +31,14 @@ export default class ProductManager {
         }
     };
 
-    consultarProductos = async (filter, options) => {
+    consultarProduct = async (filter, options) => {
         try {
             return await productsModel.paginate(filter, options);
         } catch (err) {
             return err
         }
     }
+
 
     getProductById = async (id) => {
         try {
@@ -48,7 +49,6 @@ export default class ProductManager {
         }
 
     }
-
 
 
     addProduct = async (product) => {
@@ -63,15 +63,15 @@ export default class ProductManager {
     }
 
 
-
     updateProduct = async (id, product) => {
         try {
-            return await productsModel.findByIdAndUpdate(id, { $set: product });
+            return await productsModel.findByIdAndUpdate(id, { $set: product })
         } catch (err) {
             return err
         }
 
     }
+
 
     deleteProduct = async (id) => {
         try {
@@ -81,5 +81,4 @@ export default class ProductManager {
         }
 
     }
-
-}
+};

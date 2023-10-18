@@ -1,7 +1,10 @@
-<h1>Registrarse</h1>
+<h1>Formulario de registro</h1>
+<p style="color:red">{{error}}</p>
 
 <form method="post" action="/api/sessions/signup">
     <input type="text" placeholder="nombre" name="first_name"/>
+    <br/><br/>
+    <input type="text" placeholder="Apellido" name="last_name"/>
     <br/><br/>
     <input type="email" placeholder="correo" name="email"/>
     <br/><br/>
@@ -9,3 +12,8 @@
     <br/><br/>
     <button>Registrarse</button>
 </form>
+<hr>
+<a href="/cambio-password">
+    Restaurar contraseña
+</a>
+

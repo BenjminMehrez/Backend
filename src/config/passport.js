@@ -1,9 +1,14 @@
 import passport from "passport";
 import LocalStrategy from "passport-local";
-import { createHash, isValidPassword } from "../utils.js";
+import { createHash, isValidPassword, cookieExtractor } from "../utils.js";
 import { usersService } from "../dao/index.js";
 import githubStrategy from "passport-github2";
 import { config } from "./config.js";
+import jwt from 'passport-jwt';
+
+const JWTStrategy = jwt.Strategy;
+const ExtractJWT = jwt.ExtractJwt;
+
 
 export const initializePassport = ()=>{
     passport.use("signupStrategy", new LocalStrategy(
@@ -64,9 +69,10 @@ export const initializePassport = ()=>{
                 const user = await usersService.getByEmail(profile.username);
                 if(!user){
                     const newUser = {
-                        first_name: '',
+                        first_name: profile.username,
                         email: profile.username,
                         password: createHash(profile.id)
+                        
                     };
                     const userCreated = await usersService.save(newUser);
                     return done(null,userCreated)
@@ -87,4 +93,17 @@ export const initializePassport = ()=>{
         const user = await usersService.getById(id);
         done(null,user)
     });
+
+    passport.use('jwt', new JWTStrategy({
+        jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
+        secretOrKey: 'coderSecret'
+    }, async(jwt_payload, done) => {
+        console.log(jwt_payload);
+        try {
+            return done(null, jwt_payload);
+        } catch (error) {
+            return done(error);
+        }
+    }))
 }
+

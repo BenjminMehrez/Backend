@@ -1,4 +1,5 @@
 import express from 'express';
+import cookieParser from 'cookie-parser';
 import { config } from "./config/config.js";
 import { engine } from 'express-handlebars';
 import path from "path";
@@ -9,10 +10,8 @@ import { initializePassport } from "./config/passport.js";
 import passport from "passport";
 import { viewsRouter }   from "./routes/views.js";
 import { sessionsRouter } from "./routes/sessions.routes.js";
-
 import { Server } from 'socket.io';
-import {connectDB} from "./config/server.js"
-
+import {connectDB} from "./config/Server.js"
 import socketProducts from "./listeners/socketProducts.js"
 import socketChat from './listeners/socketChat.js';
 
@@ -20,7 +19,6 @@ import socketChat from './listeners/socketChat.js';
 
 const PORT = config.server.port;
 const app = express();
-
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -35,8 +33,9 @@ const httpServer = app.listen(PORT, () => {
     }
 });
 
-app.engine('handlebars', engine({extname: 'handlebars'}));
-app.set('view engine', 'handlebars');
+app.use(cookieParser())
+app.engine('.handlebars', engine({extname: '.handlebars'}));
+app.set('view engine', '.handlebars');
 app.set('views', path.join(__dirname,"/views"));
 
 
@@ -48,6 +47,7 @@ app.use(session({
     resave:true,
     saveUninitialized:true
 }));
+
 
 initializePassport();
 app.use(passport.initialize());
@@ -62,4 +62,3 @@ socketChat(socketServer)
 
 app.use(viewsRouter);
 app.use("/api/sessions", sessionsRouter);
-

@@ -1,10 +1,9 @@
 import { usersModel } from "../models/users.js";
 
-export class UsersMongo {
+export class UsersMongo{
     constructor(){
         this.model = usersModel;
-    }
-
+    };
 
     async save(user){
         try {
@@ -13,11 +12,11 @@ export class UsersMongo {
         } catch (error) {
             throw error;
         }
-    }
+    };
 
     async getById(userId){
         try {
-            const user = await this.model.findById(userId);
+            const user = await this.model.findById(userId).lean;
             if(user){
                 return user;
             } else{
@@ -26,7 +25,7 @@ export class UsersMongo {
         } catch (error) {
             throw error;
         }
-    }
+    };
 
     async getByEmail(userEmail){
         try {
@@ -39,5 +38,5 @@ export class UsersMongo {
         } catch (error) {
             throw error;
         }
-    }
+    };
 }
