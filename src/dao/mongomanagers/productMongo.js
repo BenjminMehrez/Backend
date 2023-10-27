@@ -1,4 +1,4 @@
-import { productsModel } from "../models/products.js"
+import { productsModel } from "../../models/products.js"
 
 export class ProductManager {
     categories = async () => {
