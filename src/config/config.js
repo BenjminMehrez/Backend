@@ -6,6 +6,9 @@ export default {
     port: process.env.PORT,
     mongoUrl: process.env.MONGO_URL,
     secretSession: process.env.SECRET,
+    clientID: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    callbackUrl: process.env.CALLBACK_URL,
 
 }
 

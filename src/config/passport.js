@@ -59,9 +59,9 @@ export const initializePassport = ()=>{
 
     passport.use("githubLoginStrategy", new githubStrategy(
         {
-            clientID: config.github.clientId,
-            clientSecret: config.github.clienteSecret,
-            callbackUrl: config.github.callbackUrl
+            clientID: process.env.CLIENT_ID,
+            clientSecret: process.env.CLIENT_SECRET,
+            callbackUrl: process.env.CALLBACK_URL
         },
         async(accesstoken,refreshToken,profile,done)=>{
             try {
