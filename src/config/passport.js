@@ -3,7 +3,7 @@ import LocalStrategy from "passport-local";
 import { createHash, isValidPassword, cookieExtractor } from "../utils.js";
 import { usersService } from "../dao/index.js";
 import githubStrategy from "passport-github2";
-import { config } from "./config.js";
+import  config  from "./config.js";
 import jwt from 'passport-jwt';
 
 const JWTStrategy = jwt.Strategy;

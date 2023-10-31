@@ -1,6 +1,6 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import { config } from "./config/config.js";
+import  config  from "./config/config.js";
 import { engine } from 'express-handlebars';
 import path from "path";
 import { __dirname } from "./utils.js"
@@ -17,7 +17,7 @@ import socketChat from './listeners/socketChat.js';
 
 
 
-const PORT = config.server.port;
+const PORT = process.env.PORT;
 const app = express();
 
 app.use(express.json());
@@ -41,9 +41,9 @@ app.set('views', path.join(__dirname,"/views"));
 
 app.use(session({
     store:MongoStore.create({
-        mongoUrl:config.mongo.url
+        mongoUrl:process.env.MONGO_URL
     }),
-    secret:config.server.secretSession,
+    secret:process.env.SECRET,
     resave:true,
     saveUninitialized:true
 }));
