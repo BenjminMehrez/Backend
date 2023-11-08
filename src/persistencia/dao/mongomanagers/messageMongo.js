@@ -1,7 +1,7 @@
-
-import messageModel from "../../models/messages.js"
+import messageModel from "../../../models/messages.model.js"
 
 export default class MessagesManager {
+
   getMessages = async () => {
     try {
       return await messageModel.find().lean().exec();
@@ -9,6 +9,8 @@ export default class MessagesManager {
       return error;
     }
   }
+
+
 
   createMessage = async (message) => {
     if (message.user.trim() === '' || message.message.trim() === '') {
@@ -24,14 +26,12 @@ export default class MessagesManager {
   }
 
 
+
   deleteAllMessages = async () => {
     try {
-      console.log("Deleting all messages...");
       const result = await messageModel.deleteMany({});
-      console.log("Delete messages:", result);
       return result;
     } catch (error) {
-      console.error("Error deleting messages:", error);
       return error;
     }
   }

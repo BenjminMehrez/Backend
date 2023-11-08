@@ -1,0 +1,19 @@
+<div id="contenedor">
+    {{#each listadeproductos}}
+    <div class="card">
+        <img src ="{{thumbnail}}">
+        <div>
+            <h5 class="">{{title}}</h5>
+            <p class="">Categoria: {{category}}</p>
+            <p class="">ID:${{_id}}</p>
+            <p class="">code:${{product.code}}</p>
+            <p class="">Info: ${{product.description}}</p>
+            <p class="">STOCK:${{product.stock}}</p>
+            <p class="">$${product.price}</p>
+            <button class="" id="${product._id}" onclick="addCart('${product._id}')"> Añadir al carrito </button>
+        </div>
+    {{/each}}
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/products.js"></script>
+<script src="/js/cart.js"></script>

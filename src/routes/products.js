@@ -1,16 +1,21 @@
 import { Router } from 'express';
-import { ProductsController } from '../controllers/products.controller.js';
-
+import {privateAcces,publicAcces,adminAccess} from '../middlewares/auth.js'
 const router = Router()
 
-router.get('/', ProductsController.getProducts)
+import ProductController from '../controllers/product.controller.js';
 
-router.get("/:pid", ProductsController.getProductID);
+const pc = new ProductController();
 
-router.post("/", ProductsController.createProduct);
+//Traer todos los productos
+router.get('/', pc.getAllProducts)
+//Traer un solo producto
+router.get('/:pid', pc.getProduct)
+//Crear un producto
+router.post('/', adminAccess, pc.addProduct)
+//Modifica las carasteristicas de un producto
+router.put('/:pid', adminAccess, pc.updateProduct)
+//Eliminar un producto
+router.delete('/:pid', adminAccess, pc.deleteProduct)
 
-router.put("/:pid", ProductsController.updateProduct);
 
-router.delete("/:pid", ProductsController.deleteProduct);
-
-export default router;
+export default router

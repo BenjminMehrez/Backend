@@ -1,33 +1,22 @@
-<div>
-    <header>
-        <h1 class="container title">Product Sports</h1>
-    </header>
-
-    {{#each listadeproductos}}
-
-    <div class="container">
-        <div class="caja">
-            <div><span>ID:</span>
-                <p>{{id}}</p>
-            </div>
-            <div><span>Nombre: </span>
-                <p>{{title}}</p>
-            </div>
-            <div><span>Descripcion: </span>
-                <p>{{description}}</p>
-            </div>
-            <div><span>Precio: </span>
-                <p>{{price}}</p>
-            </div>
-            <div><span>Thumbnails: </span>
-                <p>{{thumbnails}}</p>
-            </div>
-            <div><span>Stock: </span>
-                <p>{{stock}}</p>
-            </div>
-        </div>
-
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mi Tienda</title>
+</head>
+<body>
+    <div id="productos">
     </div>
-    {{/each}}
+    
+    <div id="carrito">
+    </div>
+    
+    <script id="productos-template" type="text/x-handlebars-template">
+    </script>
+    
+    <script id="carrito-template" type="text/x-handlebars-template">
+    </script>
 
-</div>
+    <script src="handlebars.js"></script>
+    <script src="tu_script.js"></script>
+</body>
+</html>

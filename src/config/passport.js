@@ -1,109 +1,74 @@
-import passport from "passport";
-import LocalStrategy from "passport-local";
-import { createHash, isValidPassword, cookieExtractor } from "../utils.js";
-import { usersService } from "../dao/index.js";
-import githubStrategy from "passport-github2";
-import  config  from "./config.js";
-import jwt from 'passport-jwt';
+import passport from 'passport';
+import { Strategy as LocalStrategy } from 'passport-local';
+import { Strategy as GithubStrategy } from 'passport-github2';
+import UsersManager from '../persistencia/dao/mongomanagers/userMongo.js';
+import { compareData } from '../utils.js';
+import config from './config.js'
 
-const JWTStrategy = jwt.Strategy;
-const ExtractJWT = jwt.ExtractJwt;
+const um = new UsersManager()
 
-
-export const initializePassport = ()=>{
-    passport.use("signupStrategy", new LocalStrategy(
-        {
-            usernameField:"email",
-            passReqToCallback:true,
-        },
-        async (req, username, password, done)=>{
-            try {
-                const {first_name} = req.body;
-                const user = await usersService.getByEmail(username);
-                if(user){
-                    return done(null, false)
-                }
-                const newUser = {
-                    first_name:first_name,
-                    email: username,
-                    password:createHash(password)
-                }
-                const userCreated = await usersService.save(newUser);
-                return done(null,userCreated)
-            } catch (error) {
-                return done(error)
-            }
-        }
-    ));
-
-    passport.use("loginStrategy", new LocalStrategy(
-        {
-            usernameField:"email"
-        },
-        async(username, password, done)=>{
-            try {
-                const user = await usersService.getByEmail(username);
-                if(!user){
-                    return done(null, false)
-                }
-                if(isValidPassword(user,password)){
-                    return done(null,user);
-                } else {
-                    return done(null, false);
-                }
-            } catch (error) {
-                return done(error);
-            }
-        }
-    ));
-
-    passport.use("githubLoginStrategy", new githubStrategy(
-        {
-            clientID: process.env.CLIENT_ID,
-            clientSecret: process.env.CLIENT_SECRET,
-            callbackUrl: process.env.CALLBACK_URL
-        },
-        async(accesstoken,refreshToken,profile,done)=>{
-            try {
-                console.log("profile", profile);
-                const user = await usersService.getByEmail(profile.username);
-                if(!user){
-                    const newUser = {
-                        first_name: profile.username,
-                        email: profile.username,
-                        password: createHash(profile.id)
-                        
-                    };
-                    const userCreated = await usersService.save(newUser);
-                    return done(null,userCreated)
-                } else {
-                    return done(null,user)
-                }
-            } catch (error) {
-                return done(error);
-            }
-        }
-    ));
-
-    passport.serializeUser((user,done)=>{
-        done(null,user._id);
-    });
-
-    passport.deserializeUser(async(id,done)=>{
-        const user = await usersService.getById(id);
-        done(null,user)
-    });
-
-    passport.use('jwt', new JWTStrategy({
-        jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
-        secretOrKey: 'coderSecret'
-    }, async(jwt_payload, done) => {
-        console.log(jwt_payload);
+passport.use('login', new LocalStrategy(
+    async function (username, password, done) {
         try {
-            return done(null, jwt_payload);
+            const userDB = await um.findUser(username)
+            if (!userDB) {
+                return done(null, false)
+            }
+            const passwordIncorrect = await compareData(password, userDB.password)
+            if (!passwordIncorrect) {
+                return done(null, false);
+            }
+            return done(null, userDB);
         } catch (error) {
-            return done(error);
+            done(error)
         }
-    }))
-}
+    }
+))
 
+passport.use(new GithubStrategy({
+    clientID: config.clientID,
+    clientSecret:  config.clientSecret,
+    callbackUrl: config.callbackUrl
+  },
+  async function(accessToken, refreshToken, profile, done) {
+    try {
+        const userDB = await um.findUser(profile.username)
+        if(userDB){
+            if(userDB.fromGithub){
+                return done(null,userDB)
+            } else {
+                return done(null,false)
+            }
+        }
+        const newUser = {
+            first_name: profile.displayName.split(' ') [0],
+            last_name: profile.displayName.split(' ') [1],
+            username: profile.username,
+            password: ' ',
+            email: profile.emails[0].value,
+            fromGithub: true
+        }
+        const result = await um.createUser(newUser)
+        return done(null,result)
+    } catch (error) {
+        done(error)
+    }
+  }
+))
+
+
+
+
+passport.serializeUser((usuario, done) => {
+    done(null, usuario._id)
+})
+
+passport.deserializeUser(async (id, done) => {
+    try {
+        const user = await um.findUserById(id)
+        done(null, user)
+
+    } catch (error) {
+        done(error)
+    }
+})

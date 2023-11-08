@@ -1,18 +1,10 @@
-<h1>Formulario de login</h1>
-<p>{{message}}</p>
-<p style="color:red">{{error}}</p>
-
-<form id="baseForm" method="post" action="/api/sessions/login">
-    <input type="email" placeholder="correo" name="email"/>
-    <br/><br/>
-    <input type="password" placeholder="contraseña" name="password"/>
-    <br/><br/>
-    <button>Loguearse</button>
-</form>
-<hr>
-<a href="/api/sessions/loginGithub">
-    <button>
-        Iniciar sesión con github
-    </button>
-</a>
-<script src="/js/index.js"></script>
+<div id="contenedor" class="container">
+        <form id="loginForm" class="form-label bg-light">
+            <h2 class="">Login</h2>
+            <input class="form-label" type="username" name="username" placeholder="Ingrese su username" required>
+            <input class="form-label" type="password" name="password" placeholder="Ingrese su contraseña" required>
+            <button class="form-label" type="submit" > Ingresar </button>
+            <p>No estás registrado? <a href="/register">Regístrate aquí</a></p>
+        </form>
+</div>
+<script src="/js/login.js"></script>

@@ -1,6 +1,7 @@
-import { productsModel } from "../../models/products.js"
+import { productsModel } from "../../../models/products.model.js"
 
-export class ProductManager {
+export default class ProductManager {
+
     categories = async () => {
         try {
             const categories = await productsModel.aggregate([
@@ -16,7 +17,6 @@ export class ProductManager {
 
         }
         catch (err) {
-            console.log(err);
             return err
         }
 
@@ -29,9 +29,11 @@ export class ProductManager {
         } catch (err) {
             return err
         }
-    };
+    }
 
-    consultarProduct = async (filter, options) => {
+
+
+    getProducts = async (filter, options) => {
         try {
             return await productsModel.paginate(filter, options);
         } catch (err) {
@@ -40,10 +42,21 @@ export class ProductManager {
     }
 
 
+
     getProductById = async (id) => {
         try {
             return await productsModel.findById(id)
+        } catch (err) {
+            return { error: err.message }
+        }
 
+    }
+
+
+
+    getProductByCode = async (code) => {
+        try {
+            return await productsModel.findOne({ code: code })
         } catch (err) {
             return { error: err.message }
         }
@@ -53,14 +66,14 @@ export class ProductManager {
 
     addProduct = async (product) => {
         try {
-            await productsModel.create(product);
-            return await productsModel.findOne({ title: product.title })
+            return await productsModel.create(product);
         }
         catch (err) {
             return err
         }
 
     }
+
 
 
     updateProduct = async (id, product) => {
@@ -73,6 +86,7 @@ export class ProductManager {
     }
 
 
+
     deleteProduct = async (id) => {
         try {
             return await productsModel.findByIdAndDelete(id);
@@ -81,4 +95,7 @@ export class ProductManager {
         }
 
     }
-};
+
+
+
+}

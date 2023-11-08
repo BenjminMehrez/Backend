@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const collection = "Messages";
+const messageCollection = 'messages';
 
 const schema = new mongoose.Schema({
     user: String,
@@ -9,6 +9,6 @@ const schema = new mongoose.Schema({
 {timestamps:{createdAt:'created_at',updatedAt:'updated_at'}});
 
 
-const messageModel = mongoose.model(collection,schema);
+const messageModel = mongoose.model(messageCollection,schema);
 
 export default messageModel;
