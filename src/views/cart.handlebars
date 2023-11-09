@@ -1,22 +1,23 @@
 <div id="carrito" class="container">
-<h1>Carrito de Compras</h1>
-<table>
-  <tbody>
-    {{#each cart.items}}
+  <h1>Carrito de Compras</h1>
+  <table>
+    <tbody>
+      {{#each cart.items}}
       <tr>
         <td>{{this.product.name}}</td>
         <td>{{this.quantity}}</td>
         <td>${{this.product.price}}</td>
         <td>${{this.product.price this.quantity}}</td>
         <td>
-          <button data-cid="{{cid}}" data-pid="{{pid}}" class="remove-from-cart" onclick="removeProductFromCart('{{cid}}', '{{pid}}')">Eliminar</button>
+          <button data-cid="{{cid}}" data-pid="{{pid}}" class=""
+            onclick="removeProductFromCart('{{cid}}', '{{pid}}')">Eliminar</button>
           <p>Total del Carrito: ${{cart.totalPrice}}</p>
-        <button class="">Finalizar Compra</button>
+          <button class="">Finalizar Compra</button>
         </td>
       </tr>
-    {{/each}}
-  </tbody>
-</table>
+      {{/each}}
+    </tbody>
+  </table>
 </div>
 <script src="/js/cart.js"></script>
 <script src="/js/products.js"></script>

@@ -8,19 +8,25 @@ function updateCartList(products) {
   products.forEach((product) => {
     console.log(product);
     cartContent +=`
+    <div class="row">
+      <div class="col-md-3 mt-5">
+        <div class="card">
               <h2>Carrito de compras</h2>
-                  <div class="cart-item">
-                      <img src="${product.product.thumbnail}" class="cart-item-image">
-                      <div class="cart-item-details">
-                          <h5 class="cart-item-title">${product.product.title}</h5>
-                          <p class="cart-item-category">Categoría: ${product.product.category}</p>
-                          <p class="cart-item-id">ID: ${product.product._id}</p>
-                          <p class="cart-item-description">Descripción: ${product.product.description}</p>
-                          <p class="cart-item-price">$${product.product.price}</p>
-                      </div>
-                      <p class="cart-item-quantity">Cantidad: ${product.quantity}</p>
-                      <button data-cid="${cartId}" data-pid="${product.product._id}" class="remove-from-cart" onclick="removeProductFromCart('${cartId}', '${product.product._id}')">Eliminar</button>
-                  </div>
+              <img src ="https://i1.t4s.cz/products/107165-001/puma-future-ultimate-fg-ag-547185-107165-002-960.webp"${product.thumbnail}" class="w-100 card-img-top">
+              <div class="card-body">
+                  <h5 class="cart-title">${product.product.title}</h5>
+                  <p class="cart-title">Categoría: ${product.product.category}</p>
+                  <p class="cart-title">ID: ${product.product._id}</p>
+                  <p class="cart-title">Descripción: ${product.product.description}</p>
+                  <p class="cart-title">$${product.product.price}</p>
+              </div>
+              <p class="">Cantidad: ${product.quantity}</p>
+              <button data-cid="${cartId}" data-pid="${product.product._id}" class="remove-from-cart" onclick="removeProductFromCart('${cartId}', '${product.product._id}')">Eliminar</button>
+        </div>
+
+        </div>
+    </div>
+
             `
         ;
   });
