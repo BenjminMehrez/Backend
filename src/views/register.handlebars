@@ -1,15 +1,30 @@
-<div id="contenedor" class="container">
-        <form id="registerForm">
-            <h2>Registro</h2>
-            <input class="" type="text" name="first_name" placeholder="Ingrese Nombre" required>
-            <input class="" type="text" name="last_name" placeholder="Ingrese Apellido" required>
-            <input class="" type="email" name="email" placeholder="Ingrese su Email" required>
-            <input class="" type="text" name="username" placeholder="Ingrese username" required>
-            <input class="" type="text" name="age" placeholder="Ingrese su Edad" required>
-            <input class="" type="password" name="password" placeholder="Ingrese su contraseña" required>
-            <button class="" type="submit" >Registrar </button>
-        <p>¿Ya tienes una cuenta? <a href="/login">Ingrese aquí</a></p>
-        <button onclick="location.href='/api/auth/githubSignup'">Ingresar con Github</button>
-        </form>
+<div id="contenedor" class="bg-info d-flex justify-content-center align-items-center vh-100">
+    <form id="registerForm" class="bg-white p-5 rounded-5 text-secondary w-25">
+        <h2 class="text-center fs-1 fw-bold">Registro</h2>
+
+        <div class="input-group mt-3">
+            <input class="form-control" type="text" name="first_name" placeholder="Ingrese Nombre" required>
+        </div>
+        <div>
+            <input class="form-control" type="text" name="last_name" placeholder="Ingrese Apellido" required>
+        </div>
+        <div>
+            <input class="form-control" type="email" name="email" placeholder="Ingrese su Email" required>
+        </div>
+        <div>
+            <input class="form-control" type="text" name="username" placeholder="Ingrese username" required>
+        </div>
+        <div>
+            <input class="form-control" type="text" name="age" placeholder="Ingrese su Edad" required>
+        </div>
+        <div>
+            <input class="form-control" type="password" name="password" placeholder="Ingrese su contraseña" required>
+        </div>
+        <button class="btn btn-info text-white w-100 mt-3" type="submit">Login</button>
+        <div>
+            <p>¿Ya tienes una cuenta? <a class="text-dark fw-semibold" href="/login">Ingrese aquí</a></p>
+            <div class="btn btn-danger" onclick="location.href='/api/auth/githubSignup'">Ingresar con Github</div>
+        </div>
+    </form>
 </div>
 <script src="/js/register.js"></script>

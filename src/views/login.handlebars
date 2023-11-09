@@ -1,10 +1,19 @@
-<div id="contenedor" class="container">
-        <form id="loginForm" class="form-label bg-light">
-            <h2 class="">Login</h2>
-            <input class="form-label" type="username" name="username" placeholder="Ingrese su username" required>
-            <input class="form-label" type="password" name="password" placeholder="Ingrese su contraseña" required>
-            <button class="form-label" type="submit" > Ingresar </button>
-            <p>No estás registrado? <a href="/register">Regístrate aquí</a></p>
-        </form>
+<div id="contenedor" class="bg-info d-flex justify-content-center align-items-center vh-100">
+    <form id="loginForm" class="bg-white p-5 rounded-5 text-secondary w-25">
+
+        <h2 class="text-center fs-1 fw-bold">Login</h2>
+
+        <div class="input-group mt-3">
+            <input class="form-control" type="username" name="username" placeholder="Username" required>
+        </div>
+        <div class="input-group mt-3">
+            <input class="form-control" type="password" name="password" placeholder="Password" required>
+        </div>
+        <button class="btn btn-info text-white w-100 mt-3" type="submit">Login</button>
+        <div class="d-flex gap-1  justify-content-center m-1">
+            <p>No estás registrado? <a class="text-dark fw-semibold" href="/register">Regístrate aquí</a></p>
+        </div>
+
+    </form>
 </div>
 <script src="/js/login.js"></script>
