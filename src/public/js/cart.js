@@ -13,7 +13,7 @@ function updateCartList(products) {
     <div class="row">
       <div class="col-md-3 mt-5">
         <div class="card">
-              <h2>Carrito de compras</h2>
+        <h2>Carrito de Compras</h2>
               <img src ="https://i1.t4s.cz/products/107165-001/puma-future-ultimate-fg-ag-547185-107165-002-960.webp"${product.thumbnail}" class="w-100 card-img-top">
               <div class="card-body">
                   <h5 class="cart-title">${product.product.title}</h5>
@@ -23,7 +23,7 @@ function updateCartList(products) {
                   <p class="cart-title">$${product.product.price}</p>
               </div>
               <p class="">Cantidad: ${product.quantity}</p>
-              <button data-cid="${cartId}" data-pid="${product.product._id}" class="remove-from-cart" onclick="removeProductFromCart('${cartId}', '${product.product._id}')">Eliminar</button>
+              <button data-cid="${cartId}" data-pid="${product.product._id}" class="mb-2" onclick="removeProductFromCart('${cartId}', '${product.product._id}')">Eliminar</button>
         </div>
 
         </div>
@@ -43,7 +43,7 @@ function showTicket(ticket) {
     ticketContent = '<p></p>';
   }else{
     ticketContent +=`
-          <div class="cart-item-details">
+          <div class="cart-item-details bg-success p-2 text-dark bg-opacity-50">
             <h5 class="cart-item-title">PRECIO TOTAL DE LA COMPRA: ${ticket.amount}</h5>
             <p class="cart-item-category">CODE DE REF. COMPRA: ${ticket.code}</p>
             <p>HORA DE LA COMPRA: ${ticket.purchase_datetime}</p>
