@@ -16,6 +16,7 @@ import cartsRouter from './routes/carts.js';
 import productsRouter from './routes/products.js';
 import loginRouter from './routes/sessions.router.js';
 import currentRouter from './routes/current.router.js';
+import {generateFakeProduct} from './Mocks/productMock.js'
 
 //socketservers
 import socketCart from "./listeners/socketCart.js";
@@ -53,12 +54,12 @@ app.use('/api/products',productsRouter)
 app.use('/api/current',currentRouter)
 
 app.get('/api/mockingproducts', (req, res) => {
-    const fakeProducts = [];
+    const fakeProduct = [];
     for (let i = 0; i < 100; i++) {
-        const productMock = generateFakeProducts(); 
-        fakeProducts.push(productMock);
+        const productMock = generateFakeProduct(); 
+        fakeProduct.push(productMock);
     }
-    res.json(fakeProducts);
+    res.json(fakeProduct);
 });
 
 const httpServer = app.listen(PORT)

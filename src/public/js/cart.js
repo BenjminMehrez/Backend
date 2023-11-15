@@ -47,7 +47,7 @@ function showTicket(ticket) {
             <h5 class="cart-item-title">PRECIO TOTAL DE LA COMPRA: ${ticket.amount}</h5>
             <p class="cart-item-category">CODE DE REF. COMPRA: ${ticket.code}</p>
             <p>HORA DE LA COMPRA: ${ticket.purchase_datetime}</p>
-            <p class="cart-item-description">COMPRADOR:${ticket.purchaser}</p>
+            <p class="cart-item-description">COMPRADOR: ${ticket.purchaser}</p>
           </div>
                   
             `}
