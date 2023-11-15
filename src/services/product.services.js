@@ -1,4 +1,6 @@
 import ProductManager from "../persistencia/dao/mongomanagers/productMongo.js";
+import customError from '../errors/customError.js'
+import { errorMessages } from "../errors/errorEnum.js";
 
 class ProductService {
 
@@ -8,7 +10,8 @@ class ProductService {
 
     addProduct = async (product) => {
         if (!product.title || !product.description || !product.price || !product.thumbnail || !product.category || !product.stock || !product.code) {
-            return "Faltan campos por completar"
+            const CustomError = customError.createError(errorMessages.MISSING_DATA);
+            return res.status(404).json({ error: CustomError.message });
         } 
         const verifyCode = await this.product.getProductByCode(product.code)
         if (verifyCode) {

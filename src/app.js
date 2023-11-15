@@ -52,6 +52,14 @@ app.use('/api/carts',cartsRouter)
 app.use('/api/products',productsRouter)
 app.use('/api/current',currentRouter)
 
+app.get('/api/mockingproducts', (req, res) => {
+    const fakeProducts = [];
+    for (let i = 0; i < 100; i++) {
+        const productMock = generateFakeProducts(); 
+        fakeProducts.push(productMock);
+    }
+    res.json(fakeProducts);
+});
 
 const httpServer = app.listen(PORT)
 console.log(`Escuchando al puerto ${PORT}`);

@@ -1,6 +1,6 @@
 import UsersManager from "../persistencia/dao/mongomanagers/userMongo.js";
 
-const um = new UsersManager();
+const manger = new UsersManager();
 
 export const publicAcces = (req,res,next) =>{
     if(req.session.username) return res.redirect('/current');
@@ -13,29 +13,23 @@ export const privateAcces = (req,res,next)=>{
 }
 
 export const adminAccess = async (req, res, next) => {
-    // Asegúrate de que el usuario está autenticado
+
     if (!req.session.username) return res.redirect('/login');
   
-    // Busca al usuario en la base de datos
-    const user = await um.findUser(req.session.username);
-  
-    // Comprueba si el usuario es un administrador
+    const user = await manger.findUser(req.session.username);
+
     if (user.role !== 'admin') return res.status(403).send('Forbidden');
-  
-    // Si todo está bien, pasa al siguiente middleware o ruta
+
     next();
 };
 
 export const userAccess = async (req, res, next) => {
-    // Asegúrate de que el usuario está autenticado
+
     if (!req.session.username) return res.redirect('/login');
-  
-    // Busca al usuario en la base de datos
-    const user = await um.findUser(req.session.username);
-  
-    // Comprueba si el usuario tiene el rol de 'user'
+
+    const user = await manger.findUser(req.session.username);
+
     if (user.role !== 'user') return res.status(403).send('Forbidden');
-  
-    // Si todo está bien, pasa al siguiente middleware o ruta
+
     next();
 };

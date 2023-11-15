@@ -16,6 +16,7 @@ router.post('/', adminAccess, pc.addProduct)
 router.put('/:pid', adminAccess, pc.updateProduct)
 //Eliminar un producto
 router.delete('/:pid', adminAccess, pc.deleteProduct)
-
+//Traer todos los productos mocking
+router.get('/mockingproducts')
 
 export default router

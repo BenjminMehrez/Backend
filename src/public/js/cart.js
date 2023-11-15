@@ -4,7 +4,9 @@ let saveCart;
 function updateCartList(products) {
   let cartContainer = document.getElementById('carrito');
   let cartContent = '';
-
+  if (products.length === 0) {
+    cartContent = '<p>No hay productos en el carrito</p>';
+  }else{
   products.forEach((product) => {
     console.log(product);
     cartContent +=`
@@ -30,8 +32,26 @@ function updateCartList(products) {
             `
         ;
   });
-
+  cartContent += `<button class="finalize-purchase" onclick="finalizeCartPurchaser('${cartId}')">Finalizar Compra</button>`;}
   cartContainer.innerHTML = cartContent;
+}
+
+function showTicket(ticket) {
+  let ticketContainer = document.getElementById('ticket');
+  let ticketContent = '';
+  if (ticket == null) {
+    ticketContent = '<p></p>';
+  }else{
+    ticketContent +=`
+          <div class="cart-item-details">
+            <h5 class="cart-item-title">PRECIO TOTAL DE LA COMPRA: ${ticket.amount}</h5>
+            <p class="cart-item-category">CODE DE REF. COMPRA: ${ticket.code}</p>
+            <p>HORA DE LA COMPRA: ${ticket.purchase_datetime}</p>
+            <p class="cart-item-description">COMPRADOR:${ticket.purchaser}</p>
+          </div>
+                  
+            `}
+  ticketContainer.innerHTML = ticketContent;
 }
 
 fetch('/api/carts/', {
@@ -58,9 +78,8 @@ function addCart(id) {
     },
   }).then((result) => {
     result.json().then((data) => {
-      saveCart = data.cart.products;
-      console.log(saveCart);
-      updateCartList(saveCart);
+      updateCartList( data.cart.products);
+      showTicket()
     });
   });
 }
@@ -75,7 +94,9 @@ function removeProductFromCart(cid, pid) {
   })
     .then((response) => {
       if (response.ok) {
-        return response.json();
+        return response.json().then((data) => {
+          updateCartList( data.cart.products);
+        })
       } else {
         throw new Error('No se pudo eliminar el producto del carrito');
       }
@@ -88,3 +109,32 @@ function removeProductFromCart(cid, pid) {
       console.error(error);
     });
 }
+
+
+function finalizeCartPurchaser(cartId) {
+  fetch(`/api/carts/${cartId}/purchase`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then((result) => {
+    result.json().then((data) => {
+      if(data.message== 'Compra exitosa'){
+        showTicket(data.ticket)
+        updateCartList([])
+        fetch('/api/carts/', {
+          method: 'POST',
+          body: JSON.stringify({ products: []}),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then((result) => {
+          result.json().then((data) => {
+            cartId = data._id;
+          });
+        });
+      }else{
+        alert('ERROR')
+      }
+    })
+})}

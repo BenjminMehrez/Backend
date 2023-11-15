@@ -1,7 +1,9 @@
 import ProductService from "../services/product.services.js";
+import customError from '../errors/customError.js'
+import { errorMessages } from "../errors/errorEnum.js";
 
-class ProductController{
-    constructor(){
+class ProductController {
+    constructor() {
         this.service = new ProductService();
     }
 
@@ -10,51 +12,53 @@ class ProductController{
             const addProduct = await this.service.addProduct(req.body);
             res.status(200).json(addProduct);
         } catch (error) {
-            console.log(error)
-            res.status(500).json(error);
+            const CustomError = customError.createError(errorMessages.MISSING_DATA);
+            return res.status(404).json({ error: CustomError.message });
         }
     };
-    
+
     getProduct = async (req, res) => {
-        try{
+        try {
             const product = await this.service.getProduct(req.params.pid);
             res.status(200).json(product);
-        }catch(error){
-            res.status(500).json(error);
+        } catch (error) {
+            const CustomError = customError.createError(errorMessages.PRODUCT_NOT_FOUND);
+            return res.status(404).json({ error: CustomError.message });
         }
     }
 
     getAllProducts = async (req, res) => {
         try {
-          const params = {
-            query: req.query,
-            category: req.query.category
-          };
-      
-          const products = await this.service.getProducts(params);
-        
-          let prevLink;
-          let nextLink;
-          
-          if (req.originalUrl.includes('page')) {
-            prevLink = products.hasPrevPage ? req.originalUrl.replace(`page=${products.page}`, `page=${products.prevPage}`) : null;
-            nextLink = products.hasNextPage ? req.originalUrl.replace(`page=${products.page}`, `page=${products.nextPage}`) : null;
-          } else if (!req.originalUrl.includes('?')) {
-            prevLink = products.hasPrevPage ? req.originalUrl.concat(`?page=${products.prevPage}`) : null;
-            nextLink = products.hasNextPage ? req.originalUrl.concat(`?page=${products.nextPage}`) : null;
-          } else {
-            prevLink = products.hasPrevPage ? req.originalUrl.concat(`&page=${products.prevPage}`) : null;
-            nextLink = products.hasNextPage ? req.originalUrl.concat(`&page=${products.nextPage}`) : null;
-          }
-      
-          const { totalPages, prevPage, nextPage, hasNextPage, hasPrevPage, docs } = products
-          
-          return res.status(200).send({ status: 'success', payload: docs, totalPages, prevPage, nextPage, hasNextPage, hasPrevPage, prevLink, nextLink });
+            const params = {
+                query: req.query,
+                category: req.query.category
+            };
+
+            const products = await this.service.getProducts(params);
+
+            let prevLink;
+            let nextLink;
+
+            if (req.originalUrl.includes('page')) {
+                prevLink = products.hasPrevPage ? req.originalUrl.replace(`page=${products.page}`, `page=${products.prevPage}`) : null;
+                nextLink = products.hasNextPage ? req.originalUrl.replace(`page=${products.page}`, `page=${products.nextPage}`) : null;
+            } else if (!req.originalUrl.includes('?')) {
+                prevLink = products.hasPrevPage ? req.originalUrl.concat(`?page=${products.prevPage}`) : null;
+                nextLink = products.hasNextPage ? req.originalUrl.concat(`?page=${products.nextPage}`) : null;
+            } else {
+                prevLink = products.hasPrevPage ? req.originalUrl.concat(`&page=${products.prevPage}`) : null;
+                nextLink = products.hasNextPage ? req.originalUrl.concat(`&page=${products.nextPage}`) : null;
+            }
+
+            const { totalPages, prevPage, nextPage, hasNextPage, hasPrevPage, docs } = products
+
+            return res.status(200).send({ status: 'success', payload: docs, totalPages, prevPage, nextPage, hasNextPage, hasPrevPage, prevLink, nextLink });
         } catch (err) {
-          console.log(err);
+            const CustomError = customError.createError(errorMessages.GET_PRODUCTS_ERROR);
+            return res.status(404).json({ error: CustomError.message });
         }
     }
-      
+
 
 
     updateProduct = async (req, res) => {
@@ -66,7 +70,7 @@ class ProductController{
         }
     };
 
-    deleteProduct = async (req, res) => { 
+    deleteProduct = async (req, res) => {
         try {
             const deleteProduct = await this.service.deleteProduct(req.params.pid);
             res.status(200).json(deleteProduct);

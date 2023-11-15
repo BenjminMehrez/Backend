@@ -4,25 +4,25 @@ import { privateAcces } from '../middlewares/auth.js';
 
 const router = Router()
 
-const cc = new CartController()
+const manager = new CartController()
 
-//corroborar que todos los carritos existen
-router.get('/', cc.getAllCarts)
-//traer un carrito
-router.get('/:cid', cc.getCartById)
-//crear un carrito con o sin productos
-router.post('/', cc.createCart)
-//Añadir productos al carrito
-router.post('/:cid', cc.addProductToCart)
-// Ruta para finalizar la compra de un carrito
-router.get('/:cid/purchase', privateAcces, cc.finalizeCartPurchase);
-// // ENDPOINT para cambiar la cantidad de un producto en el carrito
-router.put('/:cid/products/:pid', privateAcces, cc.updateProductQuantityInCart)
-// // // ENDPOINT que actualiza la lista de productos en el carrito si es mayor a 0 lo suma y si es menor lo elimina
-router.put('/:cid', privateAcces, cc.updateProductList)
-// // ENDPOINT para eliminar un producto dado de un carrito
-router.delete('/:cid/product/:pid', privateAcces, cc.deleteProductInCart)
-// // ENDPOINT que elimina todos los productos de un carrito
-router.delete('/:cid', privateAcces, cc.emptyCart)
+
+router.get('/', manager.getAllCarts)
+
+router.get('/:cid', manager.getCartById)
+
+router.post('/', manager.createCart)
+
+router.post('/:cid', manager.addProductToCart)
+
+router.get('/:cid/purchase', privateAcces, manager.finalizeCartPurchase);
+
+router.put('/:cid/products/:pid', privateAcces, manager.updateProductQuantityInCart)
+
+router.put('/:cid', privateAcces, manager.updateProductList)
+
+router.delete('/:cid/product/:pid', privateAcces, manager.deleteProductInCart)
+
+router.delete('/:cid', privateAcces, manager.emptyCart)
 
 export default router
