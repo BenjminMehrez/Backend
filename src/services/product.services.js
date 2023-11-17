@@ -1,6 +1,6 @@
 import ProductManager from "../persistencia/dao/mongomanagers/productMongo.js";
-import customError from '../errors/customError.js'
-import { errorMessages } from "../errors/errorEnum.js";
+import customError from '../services/errors/customError.js'
+import { errorMessages } from "../services/errors/errorEnum.js";
 
 class ProductService {
 

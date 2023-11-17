@@ -1,6 +1,6 @@
 import ProductService from "../services/product.services.js";
-import customError from '../errors/customError.js'
-import { errorMessages } from "../errors/errorEnum.js";
+import customError from '../services/errors/customError.js'
+import { errorMessages } from "../services/errors/errorEnum.js";
 
 class ProductController {
     constructor() {
