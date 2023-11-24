@@ -1,6 +1,7 @@
 import ProductService from "../services/product.services.js";
 import customError from '../services/errors/customError.js'
 import { errorMessages } from "../services/errors/errorEnum.js";
+import logger from "../winston.js";
 
 class ProductController {
     constructor() {
@@ -13,6 +14,7 @@ class ProductController {
             res.status(200).json(addProduct);
         } catch (error) {
             const CustomError = customError.createError(errorMessages.MISSING_DATA);
+            logger.error('Error los campos requeridos no fueron completados //loggerTest//');
             return res.status(404).json({ error: CustomError.message });
         }
     };
@@ -23,6 +25,7 @@ class ProductController {
             res.status(200).json(product);
         } catch (error) {
             const CustomError = customError.createError(errorMessages.PRODUCT_NOT_FOUND);
+            logger.error('Error el producto buscado no existe //loggerTest//');
             return res.status(404).json({ error: CustomError.message });
         }
     }
@@ -55,6 +58,7 @@ class ProductController {
             return res.status(200).send({ status: 'success', payload: docs, totalPages, prevPage, nextPage, hasNextPage, hasPrevPage, prevLink, nextLink });
         } catch (err) {
             const CustomError = customError.createError(errorMessages.GET_PRODUCTS_ERROR);
+            logger.error('Error al traer todos los productos //loggerTest//');
             return res.status(404).json({ error: CustomError.message });
         }
     }

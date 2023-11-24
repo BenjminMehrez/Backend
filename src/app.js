@@ -3,6 +3,7 @@ import handlebars from 'express-handlebars';
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import cookieParser from "cookie-parser";
+import logger from "./winston.js"
 
 import { Server } from 'socket.io';
 import config from './config/config.js';
@@ -60,6 +61,16 @@ app.get('/api/mockingproducts', (req, res) => {
         fakeProduct.push(productMock);
     }
     res.json(fakeProduct);
+});
+
+app.get('/api/loggerTest', (req, res) => {
+    logger.debug('Mensaje de depuración en /loggerTest');
+    logger.http('Mensaje HTTP en /loggerTest');
+    logger.info('Mensaje de información en /loggerTest');
+    logger.warning('Mensaje de advertencia en /loggerTest');
+    logger.error('Mensaje de error en /loggerTest');
+    logger.fatal('Mensaje fatal en /loggerTest');
+    res.send('Pruebas de registros completadas');
 });
 
 const httpServer = app.listen(PORT)

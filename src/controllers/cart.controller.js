@@ -2,6 +2,7 @@ import CartService from "../services/cart.services.js";
 import usersManager from "../persistencia/dao/mongomanagers/userMongo.js";
 import customError from '../services/errors/customError.js'
 import { errorMessages } from "../services/errors/errorEnum.js";
+import logger from '../winston.js'
 
 class CartsController {
     constructor() {
@@ -12,7 +13,6 @@ class CartsController {
     addProductToCart = async (req, res) => {
         const { cid } = req.params;
         const { pid, quantity } = req.body;
-    
         try {
           const updatedCart = await this.service.addProductToCart(cid, pid, quantity);
           res.status(200).send({
@@ -22,6 +22,7 @@ class CartsController {
           });
         } catch (error) {
           const CustomError = customError.createError(errorMessages.ADD_PRODUCT_ERROR);
+          logger.error('Error al ingresar un producto al carrito //loggerTest//');
           return res.status(404).json({ error: CustomError.message });
         }
     }
@@ -47,6 +48,7 @@ class CartsController {
             res.status(200).json(cart);
         } catch (error) {
           const CustomError = customError.createError(errorMessages.CART_NOT_FOUND);
+          logger.error('Ocurrio un error al traer el carrito //loggerTest//');
           return res.status(404).json({ error: CustomError.message });
         }
     }
@@ -102,6 +104,7 @@ class CartsController {
           }
         } catch (error) {
           const CustomError = customError.createError(errorMessages.REMOVE_FROM_CART_ERROR);
+          logger.error('Error al intentar eliminar un producto del carrito //loggerTest//');
           return res.status(404).json({ error: CustomError.message });
         }
       }
@@ -119,6 +122,7 @@ class CartsController {
           });
         } catch (error) {
           const CustomError = customError.createError(errorMessages.EMPTY_CART);
+          logger.error('Error al intentar vaciar el carrito //loggerTest//');
           return res.status(404).json({ error: CustomError.message });
         }
     }
