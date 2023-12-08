@@ -4,13 +4,15 @@ import session from "express-session";
 import MongoStore from "connect-mongo";
 import cookieParser from "cookie-parser";
 import logger from "./winston.js"
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUiExpress from 'swagger-ui-express';
+import passport from 'passport';
 
 import { Server } from 'socket.io';
 import config from './config/config.js';
 import './config/server.js';
 import './config/passport.js'
 import { __dirname } from "./utils.js";
-import passport from 'passport';
 
 import viewsRouter from './routes/views.js';
 import cartsRouter from './routes/carts.js';
@@ -26,6 +28,20 @@ import socketChat from './listeners/socketChat.js';
 
 const app = express();
 const PORT = config.port;
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.1',
+        info: {
+            title: 'Ecommerce EB Toys',
+            description: 'Ecommerce API built with Express and MongoDB',
+        },
+    },
+    apis: [`${ __dirname }/docs/**/*.yaml`],
+};
+
+const specs = swaggerJSDoc(swaggerOptions);
+app.use('/api/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
+
 app.use(express.static(__dirname + "/public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

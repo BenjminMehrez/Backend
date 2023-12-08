@@ -7,7 +7,7 @@ socketClient.on("enviodeproducts", (obj) => {
 
 
 function updateProductList(products) {
-    let div = document.getElementById("contenedor");
+    let div = document.getElementById("product");
     let productos = "";
 
     products.forEach((product) => {
@@ -45,11 +45,11 @@ form.addEventListener("submit", (evt) => {
     socketClient.emit("addProduct", {
         title,
         description,
-        stock,
+        price,
         thumbnail,
         category,
-        price,
-        code,
+        stock,
+        code
     });
 
     form.reset();

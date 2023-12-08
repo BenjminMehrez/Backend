@@ -1,4 +1,5 @@
 import ProductManager from "../persistencia/dao/mongomanagers/productMongo.js";
+import { usersModel } from "../models/users.model.js";
 import customError from '../services/errors/customError.js'
 import { errorMessages } from "../services/errors/errorEnum.js";
 
@@ -9,15 +10,31 @@ class ProductService {
     }
 
     addProduct = async (product) => {
-        if (!product.title || !product.description || !product.price || !product.thumbnail || !product.category || !product.stock || !product.code) {
-            const CustomError = customError.createError(errorMessages.MISSING_DATA);
-            return res.status(404).json({ error: CustomError.message });
-        } 
-        const verifyCode = await this.product.getProductByCode(product.code)
-        if (verifyCode) {
-            return "El codigo se repite"
+        try {
+
+            if (!product.title || !product.description || !product.price || !product.thumbnail || !product.category || !product.stock || !product.code) {
+                const CustomError = customError.createError(errorMessages.MISSING_DATA);
+                return { error: CustomError.message };
+            }
+
+            const verifyCode = await this.product.getProductByCode(product.code);
+            if (verifyCode) {
+                return { error: "El código del producto ya existe" };
+            }
+
+            if (product.owner !== 'admin') {
+                const user = await usersModel.findOne({ email: product.owner });
+                if (!user || (user.role !== 'admin' && user.role !== 'premium')) {
+                    return { error: 'El campo "owner" debe ser un usuario premium o "admin"' };
+                }
+            }
+            
+            const addedProduct = await this.product.addProduct(product);
+            return addedProduct;
+
+        } catch (error) {
+            return { error: error.message };
         }
-        return await this.product.addProduct(product);
     };
 
     getProduct = async (id) => {
@@ -33,8 +50,11 @@ class ProductService {
           sort: { price: Number(params.query.sort) }
         };
       
-        if (!(options.sort.price === -1 || options.sort.price === 1)) {
-          delete options.sort
+
+        if (params.query.sort === 'desc' || params.query.sort === 'asc') {
+            options.sort.price = params.query.sort === 'desc' ? -1 : 1;
+        } else {
+            delete options.sort;
         }
       
         const categories = await this.product.categories()
@@ -49,16 +69,12 @@ class ProductService {
 
     updateProduct = async (id, product) => {
         const updateProduct = await this.product.updateProduct(id, product);
-        return 'Producto Actualizado';
+        return updateProduct;
     };
 
-    deleteProduct = async (id) => {
-        const deleteProduct = await this.product.deleteProduct(id);
-        if (deleteProduct) {
-            return 'Producto Eliminado';
-        } else {
-            return 'Producto no encontrado';
-        }
+
+    deleteProduct = async (pid) => {
+        const deleteProduct = await this.product.deleteProduct(pid);
     };
 
 }

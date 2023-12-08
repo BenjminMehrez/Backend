@@ -62,12 +62,12 @@ fetch('/api/carts/', {
   },
 }).then((result) => {
   result.json().then((data) => {
-    cartId = data._id;
+    cartId = data.cart._id;
   });
 });
 
 function addCart(id) {
-  fetch(`/api/carts/${cartId}/`, {
+  fetch(`/api/carts/${cartId}`, {
     method: 'POST',
     body: JSON.stringify({
       pid: id,

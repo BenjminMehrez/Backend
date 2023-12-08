@@ -1,5 +1,8 @@
 import ProductManager from "../persistencia/dao/mongomanagers/productMongo.js";
+import ProductController from '../controllers/product.controller.js'
+
 const pm = new ProductManager()
+const pc = new ProductController()
 
 const socketProducts = (socketServer) => {
     socketServer.on("connection", async (socket) => {
@@ -8,14 +11,14 @@ const socketProducts = (socketServer) => {
         socketServer.emit("enviodeproducts", listadeproductos)
 
         socket.on("addProduct", async (obj) => {
-            await pm.addProduct(obj)
+            await pc.addProduct(obj)
             const listadeproductos = await pm.getProductsView()
             socketServer.emit("enviodeproducts", listadeproductos)
         })
 
         socket.on("deleteProduct", async (id) => {
             console.log(id)
-            await pm.deleteProduct(id)
+            await pc.deleteProduct(id)
             const listadeproductos = await pm.getProductsView()
             socketServer.emit("enviodeproducts", listadeproductos)
         })

@@ -13,7 +13,7 @@ router.get('/:cid', manager.getCartById)
 
 router.post('/', manager.createCart)
 
-router.post('/:cid', manager.addProductToCart)
+router.post('/:cid', privateAcces, manager.addProductToCart)
 
 router.get('/:cid/purchase', privateAcces, manager.finalizeCartPurchase);
 

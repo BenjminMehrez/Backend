@@ -15,8 +15,12 @@ class CartManager {
 
     
     getCartById = async (cartId) => {
-
         try {
+            
+            if (!cartId) {
+                throw new Error('El ID del carrito es undefined o no está definido correctamente.');
+            }
+
             const cart = await cartModel.findById(cartId).populate('products.product');
             return cart;
         } catch (err) {

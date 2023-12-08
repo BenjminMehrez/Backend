@@ -2,7 +2,7 @@ import UserDTO from '../persistencia/dto/user.dto.js';
 import { Router } from 'express';
 import ProductManager from "../persistencia/dao/mongomanagers/productMongo.js"
 import UsersManager from "../persistencia/dao/mongomanagers/userMongo.js"
-import { privateAcces, publicAcces, adminAccess, userAccess } from '../middlewares/auth.js'
+import { privateAcces, publicAcces, adminAccess, premiumOrAdminAccess } from '../middlewares/auth.js'
 
 const productManager = new ProductManager()
 
@@ -27,7 +27,7 @@ router.get("/realtimeproducts", adminAccess, (req, res) => {
     res.render("realtimeproducts", { style: 'styles.css' })
 })
 
-router.get("/chat", privateAcces,userAccess, (req, res) => {
+router.get("/chat", privateAcces, (req, res) => {
     res.render("chat", { style: 'chat.css' })
 })
 
@@ -44,6 +44,18 @@ router.get('/current', privateAcces, async (req, res) => {
     const userDTO = new UserDTO(user);
     res.render('current', { user: userDTO, style: 'styles.css' });
 });
+
+router.get("/forgot-password", publicAcces, (req, res) => {
+    res.render("forgot-password")
+})
+
+router.get("/reset-password", publicAcces, (req, res) => {
+    res.render("reset-password")
+})
+
+router.get("/create-product-panel", premiumOrAdminAccess, (req, res) => {
+    res.render("create-product-panel")
+})
 
 
 export default router

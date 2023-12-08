@@ -21,10 +21,14 @@ const usersSchema = new mongoose.Schema({
     age: {
         type: Number
     },
+    resetToken: {
+        type: String,
+        unique: true,
+    },
     role: {
         type: String,
         default: 'user',
-        enum: ['admin', 'user']
+        enum: ['admin', 'user', 'premium']
     },
     fromGithub: {
         type: Boolean,

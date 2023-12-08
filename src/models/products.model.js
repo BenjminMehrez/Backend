@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import mongoosePaginate from 'mongoose-paginate-v2'
+import { usersModel } from "./users.model.js";
 
 const productCollection='products';
 const productSchema= new mongoose.Schema({
@@ -35,6 +36,25 @@ const productSchema= new mongoose.Schema({
     status: {
         type: Boolean,
         default: true 
+    },
+
+    owner: {
+        type: String,
+        default: 'admin',
+        required: true,
+        validate: {
+            validator: async function (value) {
+                if (value === 'admin' || value === 'premium') {
+                    return true;
+                }
+                const user = await usersModel.findOne({ email: value });
+                if (user && (user.role === 'admin' || user.role === 'premium')) {
+                    return true;
+                }
+                return false;
+            },
+            message: 'El campo "owner" debe premium o "admin"'
+        }
     }
 })
 productSchema.plugin(mongoosePaginate)

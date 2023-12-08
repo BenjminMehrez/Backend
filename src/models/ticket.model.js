@@ -19,6 +19,7 @@ const ticketSchema = new mongoose.Schema({
     purchaser: {
         type: String,
         required: true,
+        unique: true
     },
 });
 export const ticketModel = mongoose.model('Ticket', ticketSchema);

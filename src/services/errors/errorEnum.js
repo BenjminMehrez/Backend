@@ -6,4 +6,5 @@ export const errorMessages = {
     CART_NOT_FOUND: "Error al buscar el carrito",
     REMOVE_FROM_CART_ERROR: "Error al eliminar producto",
     EMPTY_CART: "Error al vaciar carrito",
+    UPDATE_PRODUCT_QUANTITY: "Error al actualizar la cantidad del producto",
 }

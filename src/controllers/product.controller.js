@@ -1,6 +1,7 @@
 import ProductService from "../services/product.services.js";
 import customError from '../services/errors/customError.js'
 import { errorMessages } from "../services/errors/errorEnum.js";
+import { usersModel } from "../models/users.model.js";
 import logger from "../winston.js";
 
 class ProductController {
@@ -9,20 +10,42 @@ class ProductController {
     }
 
     addProduct = async (req, res) => {
+
         try {
-            const addProduct = await this.service.addProduct(req.body);
-            res.status(200).json(addProduct);
+
+            if (!req.session.username) {
+                return res.status(401).json({ error: "Usuario no autenticado" });
+            }
+
+            const getUserEmail = async (username) => {
+                const user = await usersModel.findOne({ username });
+                return user ? user.email : null;
+            };
+
+            const userEmail = await getUserEmail(req.session.username);
+            if (!userEmail) {
+                return res.status(404).json({ error: "Usuario no encontrado en la base de datos" });
+            }
+
+            req.body.owner = userEmail;
+
+            const result = await this.service.addProduct(req.body);
+
+            if (result.error) {
+                return res.status(400).json({ error: result.error });
+            }
+
+            res.status(201).json({ message: "Producto creado", result });
+
         } catch (error) {
-            const CustomError = customError.createError(errorMessages.MISSING_DATA);
-            logger.error('Error los campos requeridos no fueron completados //loggerTest//');
-            return res.status(404).json({ error: CustomError.message });
+            return res.status(500).json({ error: "Error interno del servidor" });
         }
     };
 
     getProduct = async (req, res) => {
         try {
             const product = await this.service.getProduct(req.params.pid);
-            res.status(200).json(product);
+            res.status(200).json({ message: "Producto obtenido con exito", product });
         } catch (error) {
             const CustomError = customError.createError(errorMessages.PRODUCT_NOT_FOUND);
             logger.error('Error el producto buscado no existe //loggerTest//');
@@ -55,8 +78,8 @@ class ProductController {
 
             const { totalPages, prevPage, nextPage, hasNextPage, hasPrevPage, docs } = products
 
-            return res.status(200).send({ status: 'success', payload: docs, totalPages, prevPage, nextPage, hasNextPage, hasPrevPage, prevLink, nextLink });
-        } catch (err) {
+            return res.status(200).send({ status: 'Lista de productos obtenida', payload: docs, totalPages, prevPage, nextPage, hasNextPage, hasPrevPage, prevLink, nextLink });
+        } catch (error) {
             const CustomError = customError.createError(errorMessages.GET_PRODUCTS_ERROR);
             logger.error('Error al traer todos los productos //loggerTest//');
             return res.status(404).json({ error: CustomError.message });
@@ -68,18 +91,26 @@ class ProductController {
     updateProduct = async (req, res) => {
         try {
             const updateProduct = await this.service.updateProduct(req.params.pid, req.body);
-            res.status(200).json(updateProduct);
+            if (!updateProduct) {
+                return res.status(404).json({ error: "Producto no encontrado" });
+            }
+            res.status(200).json({ message: "Producto actualizado", updatedProduct: updateProduct });
         } catch (error) {
-            res.status(500).json(error);
+            res.status(500).json({ error: "Error al actualizar el producto" });
         }
     };
 
     deleteProduct = async (req, res) => {
         try {
+            const product = await this.service.getProduct(req.params.pid);
+            if (!product) {
+                return res.status(404).json({ error: "Producto no encontrado" });
+            }
             const deleteProduct = await this.service.deleteProduct(req.params.pid);
-            res.status(200).json(deleteProduct);
+            return res.status(200).json({ message: "Producto Eliminado", deleteProduct })
+            
         } catch (error) {
-            res.status(500).json(error);
+            res.status(500).json({ error: "Error al eliminar el producto" });
         }
     }
 
