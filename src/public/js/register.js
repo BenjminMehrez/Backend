@@ -12,6 +12,18 @@ form.addEventListener('submit', e => {
         headers: {
             'Content-Type': 'application/json'
         }
-    }).then(result => result.json()).then(json => console.log(json))
+    }).then(result => {
+        if (result.status == 200) {
+            window.location.replace('/current')
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Usuario Registrado",
+                timer: 6000
+              })
+        }
+    })
     document.getElementById("registerForm").reset();
 })
+
+
