@@ -32,16 +32,15 @@ const swaggerOptions = {
     definition: {
         openapi: '3.0.1',
         info: {
-            title: 'Ecommerce EB Toys',
-            description: 'Ecommerce API built with Express and MongoDB',
-        },
+            title: 'Documentacion del poder y del saber',
+            description: 'Api pensada para clase de Swagger'
+        }
     },
-    apis: [`${ __dirname }/docs/**/*.yaml`],
-};
+    apis: [`${__dirname}/docs/**/*.yaml`]
+}
 
-const specs = swaggerJSDoc(swaggerOptions);
-app.use('/api/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 
+app.use('/api/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(swaggerJSDoc(swaggerOptions)));
 app.use(express.static(__dirname + "/public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

@@ -1,0 +1,283 @@
+paths:
+  /api/carts:
+    get:
+      summary: Trae todos los carritos para probar su existencia
+      responses:
+        '200':
+          description: En caso de encontrarlos los trae y los muestra
+          content:
+            application/json:
+              example: [{"_id": "654bdbccccf9fc86dc9354f0","products": [],"purchaser": "benjamin@gmail.com","__v": 0 }]
+        '404':
+          description: Carritos no encontrados
+    post:
+      summary: Crear carrito
+      requestBody:
+        content:
+          application/json:
+            example: { "products": [] }
+      responses:
+        200:
+          description: Respuesta exitosa
+          content:
+            application/json:
+              examples:
+                success:
+                  value:
+                      {
+                        "message": "Carrito creado",
+                        "cart": {
+                          "products": [],
+                          "purchaser": "benjamin@gmail.com",
+                          "_id": "654bdbccccf9fc86dc9354f0",
+                          "__v": 0
+                        }
+                      }
+        500:
+          description: Error
+          content:
+            application/json:
+              examples:
+                error:
+                  value:
+                    error: "Necesitas loguearte para crear el carrito"
+
+  /api/carts/{cid}:
+    get:
+      summary: Obtener un carrito por ID
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Completar con el ID del carrito a obtener
+          schema:
+            type: string
+      responses:
+        200:
+          description: Respuesta exitosa
+          content:
+            application/json:
+              examples:
+                success:
+                  value:
+                    {"message": "Carrito obtenido con exito","cart": {"_id": "654bdbccccf9fc86dc9354f0","products": [{"product": {"_id": "650e307e8ea313dd847b6e99","title": "Botines","description": "Botines Future Play","price": 31000,"stock": 7 ,"thumbnail": "imagen3","code": "BTTA","category": "botines","status": true,"owner": "admin","__v": 0},"quantity": 10,"_id": "654bdbccccf9fc86dc9354f0"}],"purchaser": "benjamin@gmail.com","__v": 0}}
+        500:
+          description: Error
+          content:
+            application/json:
+              examples:
+                error:
+                  value:
+                    error: "Error al buscar el carrito"
+    post:
+      summary: Agregar un producto a un carrito
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID único de carrito
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            example: { "pid": "650e307e8ea313dd847b6e99", "quantity": 2 }
+      responses:
+        200:
+          description: Respuesta exitosa
+          content:
+            application/json:
+              examples:
+                success:
+                  value:
+                    { "status": "success","message": "The product with ID: 650e307e8ea313dd847b6e99 was added correctly","cart": {"_id": "654bf76f1d93f0f027df1df5","products": [{"product": {"_id": "650e307e8ea313dd847b6e99","title": "Botines","description": "Botines Future Play","price": 31000,"stock": 7,"thumbnail": "imagen3","code": "BTTA","category": "Botines","status": true,"owner": "admin","__v": 0},"quantity": 12,"_id": "654bdbccccf9fc86dc9354f0"}],"purchaser": "benjamin@gmail.com","__v": 0}}
+        404:
+          description: Error
+          content:
+            application/json:
+              examples:
+                error:
+                  value:
+                    error: "Cart con el ID: ${cid} no encontrado"
+        500:
+          description: Error
+          content:
+            application/json:
+              examples:
+                error:
+                  value:
+                    error: "Error al ingresar un producto al carrito"
+
+
+
+    delete:
+      summary: Eliminar todos los productos de un carrito pasando su ID
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID único de carrito
+          schema:
+            type: string
+      responses:
+        200:
+          description: Respuesta exitosa
+          content:
+            application/json:
+              examples:
+                success:
+                  value:
+                    {"status": "success","message": "The cart with ID: 654bf76f1d93f0f027df1df5 was emptied correctly","cart": {"acknowledged": true,"modifiedCount": 1,"upsertedId": null,"upsertedCount": 0,"matchedCount": 1}}
+        404:
+          description: Error
+          content:
+            application/json:
+              examples:
+                error:
+                  value:
+                    error: "Error al intentar vaciar el carrito"
+
+
+
+
+    put:
+      summary: Actualizar un carrito 
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID único de carrito
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                products:
+                  type: array
+                  items:
+                    type: object
+              example: { "pid": "650e307e8ea313dd847b6e99", "quantity": 6 }
+      responses:
+        '200':
+          description: Carrito actualizado con éxito
+        '404':
+          description: Carrito no encontrado
+
+
+  /api/carts/{cid}/product/{pid}:
+    delete:
+      summary: Eliminar un producto de un carrito
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID único de carrito
+          schema:
+            type: string
+        - name: pid
+          in: path
+          required: true
+          description: ID identificador de producto
+          schema:
+            type: string
+      responses:
+        200:
+          description: Respuesta exitosa
+          content:
+            application/json:
+              examples:
+                success:
+                  value:
+                    {"status": "success","message": "Deleted product with ID: 650e307e8ea313dd847b6e99","cart": {"_id": "654bf26efe5b766b9ee78e6d","products": [],"purchaser": "benjamin@gmail.com","__v": 0}}
+        404:
+          description: Error
+          content:
+            application/json:
+              examples:
+                error:
+                  value:
+                    error: {"error": "Error al eliminar el producto del carrito"}
+
+
+
+  /api/carts/{cid}/products/{pid}:
+    put:
+      summary: Actualizar la cantidad de un producto determinado en un carrito
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID único de carrito
+          schema:
+            type: string
+        - name: pid
+          in: path
+          required: true
+          description: ID único de producto
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: { "quantity": 1 }
+      responses:
+        200:
+          description: Respuesta exitosa
+          content:
+            application/json:
+              examples:
+                success:
+                  value:
+                    {"message": "La cantidad del producto fue actualizada","result": {"acknowledged": true,"modifiedCount": 1,"upsertedId": null,"upsertedCount": 0,"matchedCount": 1}}
+        404:
+          description: Error
+          content:
+            application/json:
+              examples:
+                error:
+                  value:
+                    error: "Error al actualizar la cantidad del producto"
+
+
+
+  /api/carts/{cid}/purchase:
+    get:
+      summary: Realizar una compra
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID único de carrito
+          schema:
+            type: string
+      responses:
+        201:
+          description: Respuesta exitosa
+          content:
+            application/json:
+              examples:
+                success:
+                  value:
+                    message: "Compra finalizada con éxito"
+        404:
+          description: Error
+          content:
+            application/json:
+              examples:
+                error:
+                  value:
+                    status: "error"
+                    message: "Usuario asociado al carrito no encontrado"
+        500:
+          description: Error
+          content:
+            application/json:
+              examples:
+                error:
+                  value:
+                    error: "Error al finalizar la compra"
