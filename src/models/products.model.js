@@ -4,6 +4,7 @@ import { usersModel } from "./users.model.js";
 
 const productCollection='products';
 const productSchema= new mongoose.Schema({
+    
     title: {
         type: String,
         required: true

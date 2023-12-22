@@ -10,17 +10,10 @@ router.get('/'), async (req, res) => {
     res.redirect('/register');
 }
 
-router.post('/register', lc.createUser)
-
-router.post('/login', lc.loginUser)
-
-router.get('/logout', lc.LogoutUser)
-
 router.get(
     "/githubSignup",
     passport.authenticate("github", { scope: ["user:email"] })
 );
-
 
 router.get(
     "/github",
@@ -30,6 +23,13 @@ router.get(
         req.session['username'] = req.user.username
         res.redirect('/current');
     });
+
+router.post('/register', lc.createUser)
+
+router.post('/login', lc.loginUser)
+
+router.get('/logout', lc.LogoutUser)
+
 
 router.get('/forgot-password', (req, res) => {
     res.render('forgot-password');
@@ -46,8 +46,6 @@ router.get('/reset-password/:token', lc.findUserByResetToken);
 router.post('/reset-password/:token', lc.resetPassword);
 
 router.post('/premium/:uid', lc.changeUserRole)
-
-
 
 
 export default router

@@ -14,13 +14,15 @@ export const privateAcces = (req, res, next) => {
     next();
 }
 
-export const adminAccess = async (req, res, next) => {
+export const userAccess = async (req, res, next) => {
 
     if (!req.session.username) return res.redirect('/login');
 
-    const user = await manger.findUser(req.session.username);
 
-    if (user.role !== 'admin') return res.status(403).send('Forbidden');
+    const user = await um.findUser(req.session.username);
+
+
+    if (user.role !== 'user') return res.status(403).send('Forbidden');
 
     next();
 };
@@ -34,7 +36,7 @@ export const premiumOrAdminAccess = async (req, res, next) => {
     if (user.role !== 'admin' && user.role !== 'premium') return res.status(403).send('Acceso no autorizado');
 
     next();
-};
+}
 
 
 export const adminOrPremiumDeleteAccess = async (req, res, next) => {

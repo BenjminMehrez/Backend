@@ -2,7 +2,7 @@ import UserDTO from '../persistencia/dto/user.dto.js';
 import { Router } from 'express';
 import ProductManager from "../persistencia/dao/mongomanagers/productMongo.js"
 import UsersManager from "../persistencia/dao/mongomanagers/userMongo.js"
-import { privateAcces, publicAcces, adminAccess, premiumOrAdminAccess } from '../middlewares/auth.js'
+import { privateAcces, publicAcces, premiumOrAdminAccess, userAccess } from '../middlewares/auth.js'
 
 const productManager = new ProductManager()
 
@@ -23,11 +23,11 @@ router.get("/products", async (req, res) => {
     res.render("products", { listadeproductos, style: 'styles.css' })
 })
 
-router.get("/realtimeproducts", adminAccess, (req, res) => {
+router.get("/realtimeproducts", premiumOrAdminAccess, (req, res) => {
     res.render("realtimeproducts", { style: 'styles.css' })
 })
 
-router.get("/chat", privateAcces, (req, res) => {
+router.get("/chat", privateAcces,userAccess, (req, res) => {
     res.render("chat", { style: 'chat.css' })
 })
 

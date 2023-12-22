@@ -9,7 +9,7 @@ class LoginController {
     try {
       const newUser = await this.service.createUser(req.body);
       req.session['username'] = newUser.username;
-      res.status(200).json({ message: "Usuario creado", user: newUser });
+      res.status(201).json({ message: "Usuario creado", user: newUser });
     } catch (error) {
       console.log(error);
       res.status(400).json({ message: error.message });
