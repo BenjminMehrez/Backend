@@ -22,7 +22,7 @@ const customLevels = {
 
 winston.addColors(customLevels.colors);
 
-let logger; 
+export let logger; 
 
 if (config.environment === 'production') {
   logger = winston.createLogger({

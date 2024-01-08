@@ -17,9 +17,11 @@ import { __dirname } from "./utils.js";
 import viewsRouter from './routes/views.js';
 import cartsRouter from './routes/carts.js';
 import productsRouter from './routes/products.js';
-import loginRouter from './routes/sessions.router.js';
+import loginRouter from './routes/login.router.js';
 import currentRouter from './routes/current.router.js';
-import {generateFakeProduct} from './Mocks/productMock.js'
+import usersRouter from './routes/users.router.js';
+import {generateFakeProducts} from './Mocks/productMock.js'
+
 
 //socketservers
 import socketCart from "./listeners/socketCart.js";
@@ -51,7 +53,6 @@ app.set('view engine', 'handlebars')
 
 app.use(cookieParser('Benjamin'))
 
-
 app.use(session({
     store: new MongoStore({
         mongoUrl: config.mongoUrl
@@ -68,14 +69,15 @@ app.use('/api/auth',loginRouter)
 app.use('/api/carts',cartsRouter)
 app.use('/api/products',productsRouter)
 app.use('/api/current',currentRouter)
+app.use('/api/users',usersRouter)
 
 app.get('/api/mockingproducts', (req, res) => {
-    const fakeProduct = [];
+    const fakeProducts = [];
     for (let i = 0; i < 100; i++) {
-        const productMock = generateFakeProduct(); 
-        fakeProduct.push(productMock);
+        const productMock = generateFakeProducts(); 
+        fakeProducts.push(productMock);
     }
-    res.json(fakeProduct);
+    res.json(fakeProducts);
 });
 
 app.get('/api/loggerTest', (req, res) => {
@@ -96,3 +98,5 @@ const socketServer = new Server(httpServer)
 socketCart(socketServer)
 socketProducts(socketServer)
 socketChat(socketServer)
+
+export default app;

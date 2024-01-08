@@ -1,62 +1,55 @@
 let cartId = 0;
 let saveCart;
-
 function updateCartList(products) {
   let cartContainer = document.getElementById('carrito');
   let cartContent = '';
   if (products.length === 0) {
     cartContent = '<p>No hay productos en el carrito</p>';
-  }else{
-  products.forEach((product) => {
-    console.log(product);
-    cartContent +=`
-    <div class="row">
-      <div class="col-md-3 mt-5">
-        <div class="card">
-        <h2>Carrito de Compras</h2>
-              <img src ="https://i1.t4s.cz/products/107165-001/puma-future-ultimate-fg-ag-547185-107165-002-960.webp"${product.thumbnail}" class="w-100 card-img-top">
-              <div class="card-body">
-                  <h5 class="cart-title">${product.product.title}</h5>
-                  <p class="cart-title">Categoría: ${product.product.category}</p>
-                  <p class="cart-title">ID: ${product.product._id}</p>
-                  <p class="cart-title">Descripción: ${product.product.description}</p>
-                  <p class="cart-title">$${product.product.price}</p>
-              </div>
-              <p class="">Cantidad: ${product.quantity}</p>
-              <button data-cid="${cartId}" data-pid="${product.product._id}" class="mb-2" onclick="removeProductFromCart('${cartId}', '${product.product._id}')">Eliminar</button>
-        </div>
-
-        </div>
+  } else {
+    products.forEach((product) => {
+      cartContent += `
+    <div class="cart-item">
+    <img src="${product.product.thumbnail}" class="cart-item-image">
+    <div class="cart-item-details">
+    <h5 class="cart-item-title">${product.product.title}</h5>
+    <p class="cart-item-category">Categoría: ${product.product.category}</p>
+    <p class="cart-item-id">ID: ${product.product._id}</p>
+    <p class="cart-item-description">Descripción: ${product.product.description}</p>
+    <p class="cart-item-price">$${product.product.price}</p>
     </div>
-
-            `
+    <p class="cart-item-quantity">Cantidad: ${product.quantity}</p>
+    <button data-cid="${cartId}" data-pid="${product.product._id}" class="remove-from-cart" onclick="removeProductFromCart('${cartId}', '${product.product._id}')">Eliminar</button>
+    </div>
+    `
         ;
-  });
-  cartContent += `<button class="finalize-purchase" onclick="finalizeCartPurchaser('${cartId}')">Finalizar Compra</button>`;}
+    });
+    cartContent += `<button class="finalize-purchase" onclick="finalizeCartPurchaser('${cartId}')">Finalizar Compra</button>`;
+  }
   cartContainer.innerHTML = cartContent;
 }
+
 
 function showTicket(ticket) {
   let ticketContainer = document.getElementById('ticket');
   let ticketContent = '';
   if (ticket == null) {
     ticketContent = '<p></p>';
-  }else{
-    ticketContent +=`
-          <div class="cart-item-details bg-success p-2 text-dark bg-opacity-50">
-            <h5 class="cart-item-title">PRECIO TOTAL DE LA COMPRA: ${ticket.amount}</h5>
-            <p class="cart-item-category">CODE DE REF. COMPRA: ${ticket.code}</p>
-            <p>HORA DE LA COMPRA: ${ticket.purchase_datetime}</p>
-            <p class="cart-item-description">COMPRADOR: ${ticket.purchaser}</p>
-          </div>
-                  
-            `}
+  } else {
+    ticketContent += `
+          <div class="ticket-details">
+            <h5 class="ticket-title">PRECIO TOTAL DE LA COMPRA: ${ticket.amount}</h5>
+            <h5 class="ticket-category">CODE DE REF. COMPRA: ${ticket.code}</h5>
+            <h5 class="ticket-description" >HORA DE LA COMPRA: ${ticket.purchase_datetime}</h5>
+            <h5 class="ticket-description">COMPRADOR:${ticket.purchaser}</h5>
+          </div>  
+            `
+  }
   ticketContainer.innerHTML = ticketContent;
 }
 
 fetch('/api/carts/', {
   method: 'POST',
-  body: JSON.stringify({ products: []}),
+  body: JSON.stringify({ products: [] }),
   headers: {
     'Content-Type': 'application/json',
   },
@@ -78,8 +71,8 @@ function addCart(id) {
     },
   }).then((result) => {
     result.json().then((data) => {
-      updateCartList( data.cart.products);
-      showTicket()
+      updateCartList(data.cart.products);
+      showTicket(data.ticket);
     });
   });
 }
@@ -95,7 +88,7 @@ function removeProductFromCart(cid, pid) {
     .then((response) => {
       if (response.ok) {
         return response.json().then((data) => {
-          updateCartList( data.cart.products);
+          updateCartList(data.cart.products);
         })
       } else {
         throw new Error('No se pudo eliminar el producto del carrito');
@@ -119,12 +112,12 @@ function finalizeCartPurchaser(cartId) {
     },
   }).then((result) => {
     result.json().then((data) => {
-      if(data.message== 'Compra exitosa'){
-        showTicket(data.ticket)
+      if (data.message == 'Compra finalizada con éxito') {
+        showTicket(data.result.ticket)
         updateCartList([])
         fetch('/api/carts/', {
           method: 'POST',
-          body: JSON.stringify({ products: []}),
+          body: JSON.stringify({ products: [] }),
           headers: {
             'Content-Type': 'application/json',
           },
@@ -133,8 +126,9 @@ function finalizeCartPurchaser(cartId) {
             cartId = data._id;
           });
         });
-      }else{
+      } else {
         alert('ERROR')
       }
     })
-})}
+  })
+}

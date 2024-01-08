@@ -1,22 +1,22 @@
 import { Router } from 'express';
-import {premiumOrAdminAccess,adminOrPremiumDeleteAccess} from '../middlewares/auth.js'
+import {premiumOrAdminAccess, adminAccess} from '../middlewares/auth.js'
 const router = Router()
 
 import ProductController from '../controllers/product.controller.js';
 
 const pc = new ProductController();
 
-//Traer todos los productos
+
 router.get('/', pc.getAllProducts)
-//Traer un solo producto
+
 router.get('/:pid', pc.getProduct)
-//Crear un producto
+
 router.post('/', premiumOrAdminAccess, pc.addProduct)
-//Modifica las carasteristicas de un producto
+
 router.put('/:pid', premiumOrAdminAccess, pc.updateProduct)
-//Eliminar un producto
-router.delete('/:pid', adminOrPremiumDeleteAccess, pc.deleteProduct)
-//Traer todos los productos mocking
+
+router.delete('/:pid', adminAccess, pc.deleteProduct)
+
 router.get('/mockingproducts')
 
 export default router

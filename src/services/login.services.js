@@ -1,6 +1,7 @@
 import UsersManager from "../persistencia/dao/mongomanagers/userMongo.js";
 import { hashData, compareData, generateResetToken} from "../utils.js";
 import { sendPasswordResetEmail } from '../nodemailer.js'
+import UserReformed from "../persistencia/dto/reformeduser.dto.js";
 
 class LoginService {
 
@@ -18,9 +19,10 @@ class LoginService {
             throw new Error("El usuario ya esta registrado");
         }
         const hashPassword = await hashData(password);
+        userData.last_connection = new Date();
         const newUser = await this.login.createUser({ ...userData, password: hashPassword });
-        console.log(newUser)
-        return newUser;
+        const userWithChanges = new UserReformed(newUser);
+        return userWithChanges;
     }
 
     loginUser = async (userData) => {
@@ -36,6 +38,10 @@ class LoginService {
         if (!passwordIncorrect) {
             throw new Error('El usuario o la contraseña no son correctas');
         }
+
+        userDB.last_connection = new Date();
+        await userDB.save();
+
         return userDB;
     }
 
@@ -51,7 +57,6 @@ class LoginService {
     }
 
     resetPassword = async (token, newPassword) =>  {
-        console.log(token,newPassword)
         const userDB = await this.login.findUserByResetToken(token);
         if (!userDB) {
             throw new Error('Token de recuperación inválido o expirado');
@@ -114,6 +119,21 @@ class LoginService {
             throw error;
         }
     }
+
+    adminChangeRoles = async (username) => {
+        try {
+            const user = await this.login.findUser(username);
+
+            user.role = user.role === 'user' ? 'premium' : 'user';
+
+            const updatedUser = await this.login.updateUserRoleByUsername(username, user.role);
+
+            return updatedUser;
+            
+        } catch (error) {
+            throw error;
+        }
+    };
 
 }
 

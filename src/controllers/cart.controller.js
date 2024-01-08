@@ -3,6 +3,7 @@ import productService from "../services/product.services.js";
 import usersManager from "../persistencia/dao/mongomanagers/userMongo.js";
 import customError from '../services/errors/customError.js'
 import { errorMessages } from "../services/errors/errorEnum.js";
+import { sendMailWithPurchaser } from "../nodemailer.js";
 import logger from '../winston.js'
 
 class CartsController {
@@ -54,12 +55,10 @@ class CartsController {
   }
 
 
-
   createCart = async (req, res) => {
     try {
       const fuser = await this.userService.findUser(req.session.username)
       const { products } = req.body;
-      console.log(products)
       if (!Array.isArray(products)) {
         return res.status(400).send('Invalid request: products must be an array');
       }
@@ -77,7 +76,7 @@ class CartsController {
     } catch (error) {
       const CustomError = customError.createError(errorMessages.CART_NOT_FOUND);
       logger.error('Ocurrio un error al traer el carrito //loggerTest//');
-      return res.status(404).json({ error: CustomError.message });
+      return res.status(500).json({ error: CustomError.message });
     }
   }
 
@@ -126,13 +125,10 @@ class CartsController {
       const updatedCart = await this.service.deleteProductInCart(cid, pid);
 
       if (!updatedCart) {
-
         res.status(404).send({ status: 'error', message: `Cart with ID: ${cid} not found` });
       } else if (!updatedCart.products) {
-
         res.status(404).send({ status: 'error', message: 'No products in the cart' });
       } else {
-
         res.status(200).send({ status: 'success', message: `Deleted product with ID: ${pid}`, cart: updatedCart });
       }
     } catch (error) {
@@ -165,6 +161,8 @@ class CartsController {
   
     try {
       const result = await this.service.finalizeCartPurchase(cid);
+      const purchaserEmail = result.ticket.purchaser;
+      sendMailWithPurchaser(purchaserEmail,result.ticket);
       res.status(201).json({ message: 'Compra finalizada con éxito', result });
   
     } catch (error) {

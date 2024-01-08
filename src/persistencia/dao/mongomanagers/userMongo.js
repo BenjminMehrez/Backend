@@ -1,6 +1,5 @@
 import { usersModel } from '../../../models/users.model.js';
 
-
 export default class UsersManager {
 
     async createUser(user) {
@@ -101,6 +100,62 @@ export default class UsersManager {
             }
 
             return updatedUser;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getAllUsers() {
+        try {
+            const users = await usersModel.find();
+            return users;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+
+    async deleteUsersInactive() {
+        try {
+            const users = await usersModel.deleteMany({
+                last_connection: { $lte: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) },
+                $or: [
+                    { role: 'user' },
+                    { role: 'premium' }
+                ]
+            });
+            return users;
+        } catch (error) {
+            console.error(error);
+            throw error
+        }
+    }
+
+    async findInactiveUsers() {
+        const inactiveUsers = await usersModel.find({
+            last_connection: { $lte: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) },
+            $or: [
+                { role: 'user' },
+                { role: 'premium' },
+            ]
+        })
+        return inactiveUsers
+    }
+
+    async deleteUserById(id) {
+        try {
+            const user = await usersModel.findOneAndDelete(id);
+            return user;
+        } catch (error) {
+            console.error('Error al eliminar usuario:', error);
+            throw error;
+        }
+    }
+
+    async updatedUser(id){
+        try {
+            const user = await usersModel.findOneAndUpdate(id)
+            return user;
         } catch (error) {
             throw error;
         }

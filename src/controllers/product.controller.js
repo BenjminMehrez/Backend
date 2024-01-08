@@ -2,6 +2,7 @@ import ProductService from "../services/product.services.js";
 import customError from '../services/errors/customError.js'
 import { errorMessages } from "../services/errors/errorEnum.js";
 import { usersModel } from "../models/users.model.js";
+import { sendMailDeleteProduct } from '../nodemailer.js';
 import logger from "../winston.js";
 
 class ProductController {
@@ -87,7 +88,6 @@ class ProductController {
     }
 
 
-
     updateProduct = async (req, res) => {
         try {
             const updateProduct = await this.service.updateProduct(req.params.pid, req.body);
@@ -107,9 +107,17 @@ class ProductController {
                 return res.status(404).json({ error: "Producto no encontrado" });
             }
             const deleteProduct = await this.service.deleteProduct(req.params.pid);
+            if (product.owner !== 'admin'){
+                const userEmail = product.owner;
+                const user = await usersModel.findOne({ email: userEmail });
+                if (user && user.role === 'premium') {
+                    const sendDeletedProduct = await sendMailDeleteProduct(userEmail);
+                }
+            }
             return res.status(200).json({ message: "Producto Eliminado", deleteProduct })
             
         } catch (error) {
+            console.log(error)
             res.status(500).json({ error: "Error al eliminar el producto" });
         }
     }

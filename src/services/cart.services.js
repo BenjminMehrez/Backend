@@ -5,7 +5,6 @@ import UsersManager from "../persistencia/dao/mongomanagers/userMongo.js";
 import customError from '../services/errors/customError.js'
 import { errorMessages } from "../services/errors/errorEnum.js";
 
-
 class CartService {
 
   constructor() {
@@ -50,7 +49,8 @@ class CartService {
     }
     cartData.purchaser = vemail;
     cartData.products = validProducts;
-    return await this.cart.addCart(cartData)
+    let carrito = await this.cart.addCart(cartData)
+    return carrito
   };
 
   getCart = async (id) => {
@@ -87,7 +87,6 @@ class CartService {
 
 
   updateProductList = async (cid, pid, quantity) => {
-    console.log(pid)
     try {
       const cart = await this.cart.getCartById(cid);
 
@@ -103,7 +102,7 @@ class CartService {
         cart.products.push({ _id: pid, quantity });
       }
 
-      return await cart.save();
+      return await cart
     } catch (error) {
       throw error;
     }
@@ -201,7 +200,7 @@ class CartService {
         return totalAmount;
       }
       const result = calculateTotalAmount(productsToBuy);
-      console.log(result)
+
       const ticket = new ticketModel({
         purchase_datetime: new Date(),
         amount: result,
@@ -214,7 +213,7 @@ class CartService {
 
       await this.cart.updateCart(cid, cart.products);
 
-      return { message: 'Compra exitosa', ticket: ticket };
+      return { ticket: ticket }
     } catch (error) {
       throw error;
     }

@@ -10,7 +10,7 @@ const manager = new CartController()
 router.get('/', manager.getAllCarts)
 
 router.get('/:cid', manager.getCartById)
-
+    
 router.post('/', manager.createCart)
 
 router.post('/:cid', privateAcces, manager.addProductToCart)

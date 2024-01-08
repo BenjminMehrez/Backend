@@ -15,8 +15,7 @@ class CartManager {
 
     
     getCartById = async (cartId) => {
-        try {
-            
+        try {            
             if (!cartId) {
                 throw new Error('El ID del carrito es undefined o no está definido correctamente.');
             }

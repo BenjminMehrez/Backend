@@ -1,6 +1,7 @@
 import {dirname} from "path"
 import { fileURLToPath } from "url"
 import bcrypt from "bcrypt"
+import multer from "multer"
 export const __dirname=dirname(fileURLToPath(import.meta.url))
 
 export const hashData = async (data) => {
@@ -23,3 +24,22 @@ export const generateResetToken = () => {
 
     return token;
 }
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        if(req.query.type == 'documents'){
+            cb(null, __dirname + '/public/documents')
+        }
+        if(req.query.type == 'profile'){
+            cb(null, __dirname + '/public/profile');
+        }
+        if(req.query.type == 'products'){
+            cb(null, __dirname + '/public/products');
+        }
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname);
+    }
+});
+
+export const uploader = multer({ storage });

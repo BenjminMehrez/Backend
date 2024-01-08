@@ -1,8 +1,10 @@
 import LoginService from "../services/login.services.js";
+import UsersManager from "../persistencia/dao/mongomanagers/userMongo.js";
 
 class LoginController {
   constructor() {
     this.service = new LoginService();
+    this.login = new UsersManager();
   }
 
   createUser = async (req, res) => {
@@ -29,10 +31,16 @@ class LoginController {
 
   LogoutUser = async (req, res) => {
     try {
+
+      const username = req.session.username;
+      const user = await this.login.findUser(username);
+      await user.updateLastConnectionOnLogout();
+
       req.session.destroy(err => {
         if (err) return res.status(500).send({ status: "error", error: "No pudo cerrar sesion" })
         res.redirect('/login');
       })
+
     } catch (error) {
       console.log(error);
       res.status(400).json({ message: error.message });
@@ -112,6 +120,16 @@ class LoginController {
         res.status(200).json({ message: 'Rol del usuario cambiado con éxito', user });
     } catch (error) {
         res.status(500).json({ error: 'Error interno del servidor' });
+    }
+  }
+
+  adminchangerole = async (req, res) => {
+    const userId = req.params.uid;
+    try {
+      const user = await this.service.adminChangeRoles(userId);
+      res.status(200).json({ message: 'Rol del usuario cambiado con éxito' });
+    } catch (error) {
+      res.status(500).json({ error: 'Error interno del servidor' });
     }
   }
 

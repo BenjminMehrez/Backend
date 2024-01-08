@@ -2,6 +2,7 @@ import ProductManager from "../persistencia/dao/mongomanagers/productMongo.js";
 import { usersModel } from "../models/users.model.js";
 import customError from '../services/errors/customError.js'
 import { errorMessages } from "../services/errors/errorEnum.js";
+import { sendMailDeleteUser } from '../nodemailer.js';
 
 class ProductService {
 
@@ -39,39 +40,37 @@ class ProductService {
 
     getProduct = async (id) => {
         const product = await this.product.getProductById(id);
-        const newProduct = { id: product._id, title: product.title, description: product.description, price: product.price, stock: product.stock, thumbnail: product.thumbnail, category: product.category }
+        const newProduct = { id: product._id, title: product.title, description: product.description, price: product.price, stock: product.stock, thumbnail: product.thumbnail, category: product.category, owner: product.owner }
         return newProduct;
     }
 
     getProducts = async (params) => {
         const options = {
-          page: Number(params.query.page) || 1,
-          limit: Number(params.query.limit) || 10,
-          sort: { price: Number(params.query.sort) }
+            page: Number(params.query.page) || 1,
+            limit: Number(params.query.limit) || 10,
+            sort: {}
         };
-      
 
         if (params.query.sort === 'desc' || params.query.sort === 'asc') {
             options.sort.price = params.query.sort === 'desc' ? -1 : 1;
         } else {
             delete options.sort;
         }
-      
-        const categories = await this.product.categories()
-        const result = categories.some(categ => categ === params.category)
-        
-        if (result) {
-          return await this.product.getProducts({ category: params.category }, options);
-        }
-      
-        return await this.product.getProducts({}, options);
-    }
 
-    updateProduct = async (id, product) => {
-        const updateProduct = await this.product.updateProduct(id, product);
-        return updateProduct;
+        const categories = await this.product.categories();
+        const result = categories.some((categ) => categ === params.category);
+
+        if (result) {
+            return await this.product.getProducts({ category: params.category }, options);
+        }
+
+        return await this.product.getProducts({}, options);
     };
 
+    updateProduct = async (pid, product) => {
+        const updateProduct = await this.product.updateProduct(pid, product);
+        return updateProduct;
+    };
 
     deleteProduct = async (pid) => {
         const deleteProduct = await this.product.deleteProduct(pid);

@@ -2,7 +2,7 @@ import UsersManager from "../persistencia/dao/mongomanagers/userMongo.js";
 import { usersModel } from "../models/users.model.js";
 import { productsModel } from '../models/products.model.js'
 
-const manger = new UsersManager();
+const manager = new UsersManager();
 
 export const publicAcces = (req, res, next) => {
     if (req.session.username) return res.redirect('/current');
@@ -19,7 +19,7 @@ export const userAccess = async (req, res, next) => {
     if (!req.session.username) return res.redirect('/login');
 
 
-    const user = await um.findUser(req.session.username);
+    const user = await manager.findUser(req.session.username);
 
 
     if (user.role !== 'user') return res.status(403).send('Forbidden');
@@ -31,9 +31,20 @@ export const premiumOrAdminAccess = async (req, res, next) => {
 
     if (!req.session.username) return res.redirect('/login');
 
-    const user = await manger.findUser(req.session.username);
+    const user = await manager.findUser(req.session.username);
 
     if (user.role !== 'admin' && user.role !== 'premium') return res.status(403).send('Acceso no autorizado');
+
+    next();
+}
+
+export const adminAccess = async (req, res, next) => {
+
+    if (!req.session.username) return res.redirect('/login');
+
+    const user = await manager.findUser(req.session.username);
+
+    if (user.role !== 'admin') return res.status(403).send('Acceso no autorizado');
 
     next();
 }

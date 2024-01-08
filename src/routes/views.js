@@ -1,8 +1,9 @@
 import UserDTO from '../persistencia/dto/user.dto.js';
+import UserReformed from '../persistencia/dto/reformeduser.dto.js';
 import { Router } from 'express';
 import ProductManager from "../persistencia/dao/mongomanagers/productMongo.js"
 import UsersManager from "../persistencia/dao/mongomanagers/userMongo.js"
-import { privateAcces, publicAcces, premiumOrAdminAccess, userAccess } from '../middlewares/auth.js'
+import { privateAcces, publicAcces, premiumOrAdminAccess, adminAccess } from '../middlewares/auth.js'
 
 const productManager = new ProductManager()
 
@@ -27,7 +28,7 @@ router.get("/realtimeproducts", premiumOrAdminAccess, (req, res) => {
     res.render("realtimeproducts", { style: 'styles.css' })
 })
 
-router.get("/chat", privateAcces,userAccess, (req, res) => {
+router.get("/chat", privateAcces, (req, res) => {
     res.render("chat", { style: 'chat.css' })
 })
 
@@ -41,7 +42,15 @@ router.get("/login", publicAcces, (req, res) => {
 
 router.get('/current', privateAcces, async (req, res) => {
     const user = await userManager.findUser(req.session.username);
+    if (user === null) {
+        req.session.destroy(err => {
+            if (err) return res.status(500).send({ status: "error", error: "No pudo cerrar sesion" })
+            res.redirect('/login');
+        })
+    }
     const userDTO = new UserDTO(user);
+    userDTO.isAdmin = user.role === 'admin' ? true : false;
+    userDTO.isPremiumOrAdmin = user.role === 'admin' || user.role === 'premium' ? true : false;
     res.render('current', { user: userDTO, style: 'styles.css' });
 });
 
@@ -57,5 +66,14 @@ router.get("/create-product-panel", premiumOrAdminAccess, (req, res) => {
     res.render("create-product-panel")
 })
 
+router.get("/:uid/documents", privateAcces, (req, res) => {
+    res.render("uploadfiles")
+})
+
+router.get("/panel", adminAccess, async (req, res) => {
+    const users = await userManager.getAllUsers()
+    const userwithchanges = users.map(user => new UserReformed(user));
+    res.render("paneladmin", { user: userwithchanges  })
+})
 
 export default router

@@ -13,7 +13,8 @@ const usersSchema = new mongoose.Schema({
         unique: true
     },
     email: {
-        type: String, unique: true
+        type: String, 
+        unique: true
     },
     password: {
         type: String
@@ -23,7 +24,7 @@ const usersSchema = new mongoose.Schema({
     },
     resetToken: {
         type: String,
-        unique: true,
+        default: null,
     },
     role: {
         type: String,
@@ -40,10 +41,41 @@ const usersSchema = new mongoose.Schema({
             ref: 'carts',
             default: null
         }
-    }
+    },
+    documents: {
+        type: [
+            {
+                name: {
+                    type: String,
+                },
+                reference: {
+                    type: String,
+                },
+            },
+        ],
+        default: [],
+    },
+    status: {
+        type: String,
+        default: 'Activo',
+    },
+    last_connection: {
+        type: Date,
+        default: null,
+    },
 });
+usersSchema.pre('update', function (next) {
+    this.update({}, { $set: { last_connection: new Date() } });
+    next();
+});
+
+usersSchema.methods.updateLastConnectionOnLogout = function () {
+    this.last_connection = new Date();
+    return this.save();
+};
+
 usersSchema.pre('find', function (next) {
-    this.populate('carts._id');
+    this.populate('cart._id');
     next();
 });
 

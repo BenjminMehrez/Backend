@@ -3,17 +3,18 @@
     <div class="card">
         <img src ="{{thumbnail}}">
         <div>
-            <h5 class="">{{title}}</h5>
-            <p class="">Categoria: {{category}}</p>
-            <p class="">ID:${{_id}}</p>
-            <p class="">code:${{product.code}}</p>
-            <p class="">Info: ${{product.description}}</p>
-            <p class="">STOCK:${{product.stock}}</p>
-            <p class="">$${product.price}</p>
-            <button class="" id="${product._id}" onclick="addCart('${product._id}')"> Añadir al carrito </button>
+            <h5 class="card-title mytitulo">{{title}}</h5>
+            <p class="card-text mydescripcion">Categoria: {{category}}</p>
+            <p class="card-text mydescripcion">ID:${{_id}}</p>
+            <p class="card-text mydescripcion">code:${{product.code}}</p>
+            <p class="card-text mydescripcion">Info: ${{product.description}}</p>
+            <p class="card-text mydescripcion">STOCK:${{product.stock}}</p>
+            <p class="card-text mydescripcion">$${product.price}</p>
+            <button class="btn mx-auto d-block mybutton" id="${product._id}" onclick="addCart('${product._id}')"> Añadir al carrito </button>
         </div>
     {{/each}}
 </div>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/products.js"></script>
 <script src="/js/cart.js"></script>
+

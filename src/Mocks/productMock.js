@@ -1,7 +1,7 @@
 import { fakerES_MX as faker } from "@faker-js/faker";
 
-export const generateFakeProduct = () => {
-  const fakeProduct = {
+export const generateFakeProducts = () => {
+  const fakeProducts = {
     title: faker.commerce.productName(),
     description: faker.commerce.productDescription(),
     price: faker.commerce.price(),
@@ -9,5 +9,5 @@ export const generateFakeProduct = () => {
     category: faker.commerce.department(),
     thumbnails: [faker.image.url()],
   };
-  return fakeProduct;
+  return fakeProducts;
 };
