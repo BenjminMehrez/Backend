@@ -10,9 +10,9 @@ function updateProductList(products) {
   products.forEach((product) => {
     productos += `
     <div class="row">
-      <div class="col-md-3 mt-5">
+      <div class="col-4 mt-5">
         <div class="card">
-          <img src ="https://i1.t4s.cz/products/107165-001/puma-future-ultimate-fg-ag-547185-107165-002-960.webp"${product.thumbnail}" class="w-100 card-img-top">
+          <img src ="${product.thumbnail}" class="card-img-top">
             <div class="card-body">
               <h2 class="card-title text-center">${product.title}</h2>
                     <p class="card-text text-center">Categoria: ${product.category}</p>
