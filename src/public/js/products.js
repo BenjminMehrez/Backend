@@ -10,7 +10,7 @@ function updateProductList(products) {
   products.forEach((product) => {
     productos += `
     <div class="row">
-      <div class="col-4 mt-5">
+      <div class="col-3 mt-5">
         <div class="card">
           <img src ="${product.thumbnail}" class="card-img-top">
             <div class="card-body">
